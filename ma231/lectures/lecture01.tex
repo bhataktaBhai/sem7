@@ -1,0 +1,103 @@
+\chapter*{The course}
+\lecture{2025-08-05}{}
+
+\textbf{Textbook:}
+\begin{enumerate}
+    \item Viro, O.Ya., Ivanov, O.A., Netsvetaev, N., and Kharlamov, V.M., Elementary Topology: Problem Textbook, AMS, 2008.
+    \item Armstrong, M.~A., Basic Topology, Springer (India), 2004.
+    \item Munkres, J.~R., Topology, Pearson Education, 2005.
+\end{enumerate}
+\textbf{Teams Code:}
+
+\begin{center}
+    Study of properties associated with continuity and limits.
+\end{center}
+\begin{examples}
+    \item Any continuous function $f\colon [0, 1] \to \set{0, 1}$ is
+    constant, by the intermediate value theorem.
+    \item Any continuous function $f\colon [0, 1] \to \R$ is bounded.
+\end{examples}
+The first example illustrates connectivity, and the second compactness.
+We study continuous functions $f\colon X \to Y$ between topological spaces.
+Topological spaces must come with a notion of continuity and limits.
+They must coincide with our usual understanding in familiar settings such as
+$\R^n$, convergence of sequences, and so on.
+We should be able to construct new topological spaces from old ones.
+
+Our first attempt is \emph{metric spaces}.
+\begin{definition}[Metric space] \label{def:metric-space}
+    A \emph{metric} on a set $X$ is a function
+    $d\colon X \times X \to [0, \infty)$
+    such that
+    \begin{enumerate}
+        \item $d(x, x) = 0$ for all $x \in X$,
+        \item{} [Symmetry] $d(x_1, x_2) = d(x_2, x_1)$ for all
+            $x_1, x_2 \in X$, and
+        \item{} [Triangle inequality]
+            $d(a, c) \le d(a, b) + d(b, c)$ for all $a, b, c \in X$.
+        \item{} [Positivity] $d(x_1, x_2) = 0$ implies that
+            $x_1 = x_2$.
+    \end{enumerate}
+    The pair $(X, d)$ is called a \emph{metric space}.
+\end{definition}
+\begin{remark}
+    If positivity does not hold, then we can define $a \sim b$ on $X$ iff
+    $d(a, b) = 0$.
+    $d$ then induces a metric on the quotient space $X/{\sim}$.
+\end{remark}
+In the early 1900's, it wasn't clear whether the notion of a topological
+space is even required.
+In fact, Hausdorff introduced topological spaces in the second edition of
+his textbook, but went back to metric spaces in the third edition.
+
+Here is a non-example of a metric space.
+Consider $X = \R^\R$ and say that $f_n \to f$ iff $f_n(x) \to f(x)$ for all
+$x \in \R$.
+\begin{claim} \label{thm:non-metric}
+    There is no metric on $\R^\R$ such that $f_n \to f$ iff
+    $d(f_n, f) \to 0$.
+\end{claim}
+\todo{We will prove this much later, once we study product topologies and
+first countability.}
+
+Suppose $(X, d)$ is a metric space and $\sim$ an equivalence relation on
+$X$.
+We want that any continuous function $f\colon X \to Y$ for which
+$a \sim b$ implies $f(a) = f(b)$, the induced function
+$\wtld{f}\colon X/{\sim} \to Y$ is continuous.
+This is similar to how group homomorphisms induce a homomorphism on quotient
+groups.
+In general, such quotient metrics do not exist.
+\todo{We will come back to this with Hausdorff things.}
+\begin{examples}
+    \item Consider $\R$ with $a \sim b$ iff $a - b \in \Q$.
+    \item $\R^2$ with equivalence classes as Gadgil drew.
+\end{examples}
+
+The standard approach is to abstract properties of \emph{open sets}.
+In the metric space $(X, d)$, a set $U \subseteq X$ is open if for every
+$x \in U$ there exists an $\eps > 0$ such that the $\eps$-neighborhood
+of $x$ is contained in $U$.
+\begin{definition}[Topological space] \label{def:topo}
+    Let $X$ be a set.
+    A \emph{topology} on $X$ is a collection $\T$ of subsets of $X$ such
+    that
+    \begin{enumerate}
+        \item $\O, X \in \T$;
+        \item if $\set{U_\alpha}_{\alpha \in I}$ is a subcollection of
+            $\T$, then $\bigcup_{\alpha \in I} U_\alpha \in \T$;
+        \item if $U_1, \dots, U_n \in \T$, then $U_1 \cap \dots \cap U_n \in \T$.
+    \end{enumerate}
+    Sets in $\T$ are called \emph{open sets} and the pair $(X, \T)$ is
+    called a \emph{topological space}.
+\end{definition}
+\begin{examples}
+    \item{} [Discrete topology] For any set $X$, $2^X$ is a topology on $X$.
+    \item{} [Indiscrete topology] For any set $X$,
+        $\set{\O, X}$ is a topology on $X$.
+    \item{} [Standard topology on $\R$] The collection of all
+        subsets that can be expressed as a union of open intervals
+        is a topology on $\R$.
+        Alternatively and more simply, the metric space definition also
+        yields the same topology.
+\end{examples}

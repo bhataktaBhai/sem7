@@ -1,0 +1,211 @@
+\chapter*{The Course}
+\lecture{2025-08-05}{}
+
+\textbf{Resources:}
+\begin{enumerate}
+    \item A.~Khare. Matrix analysis and entrywise positivity preservers, 2022.
+    \item Rajendra~Bhatia. Matrix analysis.
+    \item Rajendra~Bhatia. Positive definite matrices.
+\end{enumerate}
+
+\textbf{Grading:}
+\begin{itemize}
+    \item[(50\%)] Homework + Midterm
+    \item[(50\%)] Final presentation
+\end{itemize}
+
+\begin{center}
+    Various notions of matrix positivity and maps preserving these structures.
+\end{center}
+We'll briefly see how GPS triangulation works, and also Heron's formula in
+$n$ dimensions.
+
+Over this course, we will only work over $\R$, and ``positive'' will often
+mean ``non-negative''.
+
+\chapter{Positivity}
+One easy way to generalize positivity (non-negativity) of real numbers to
+matrices is to consider diagonal matrices with non-negative entries.
+
+More generally, we 
+\begin{theorem}[Spectral Theorem] \label{thm:spectral}
+    Each symmetric matrix $A \in \R^{n \times n}$ has an orthonormal
+    eigenbasis, that is, there exist orthonormal vectors $u_1, \dots, u_n$
+    with eigenvalues $\lambda_1, \dots, \lambda_n$ such that
+    $A u_i = \lambda_i u_i$.
+\end{theorem}
+We could write \[
+    A \begin{pmatrix}
+        u_1 & \cdots & u_n
+    \end{pmatrix} = \begin{pmatrix}
+        \lambda_1 u_1 & \cdots & \lambda_n u_n
+    \end{pmatrix} = \begin{pmatrix}
+        u_1 & \cdots & u_n
+    \end{pmatrix} \begin{pmatrix}
+        \lambda_1 & \cdots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \cdots & \lambda_n
+    \end{pmatrix}.
+\] Calling the matrix of eigenvectors $U$ and the diagonal matrix of
+eigenvalues $\Lambda$, we can write $A U = U \Lambda$, so that
+$A = U \Lambda U^T$.
+Note that $U^{-1} = U^T$ since \[
+    \begin{pmatrix}
+        u_1^T \\
+        \vdots \\
+        u_n^T
+    \end{pmatrix} \begin{pmatrix}
+        u_1 & \cdots & u_n
+    \end{pmatrix} = (u_i^T u_j)_{ij} = \id_n
+\] iff the $u_i$ are orthonormal.
+
+We call matrices of this form \emph{positive semidefinite}.
+That is, a matrix $A$ is positive semidefinite iff it can be expressed as
+$U \Lambda U^T$ where $U \in O(n)$ and $\Lambda$ is a diagonal matrix with
+$\lambda_{i i} \ge 0$.
+The formal definition is different.
+\begin{definition}[Positive Semidefinite] \label{def:psd}
+    Let $A \in \R^{n \times n}$ and let
+    $\kappa_A\colon \R^n \times \R^n \to \R$ be the associated bilinear form
+    $\kappa_A(v, w) = v^T A w$.
+    $A$ is \emph{positive semidefinite} iff $A = A^T$ and
+    $\kappa_A(v, v) \ge 0$ for all $v \in \R^n$.
+\end{definition}
+
+\begin{remark}
+    If $U = \begin{pmatrix}
+        u_1 & \cdots & u_n
+    \end{pmatrix}$ and $\Lambda = \diag(\lambda_1, \dots, \lambda_n)$
+    is a positive diagonal matrix, then \[
+        U \Lambda U^T = \sum_i \lambda_i u_i u_i^T
+    \] so $x^T (U \Lambda U^T) x = \sum_i \lambda_i \innerp{u_i}{x}^2 \ge 0$.
+
+    Thus the definition we discussed earliear is equivalent to the one in
+    \cref{def:psd}.
+\end{remark}
+
+A \emph{principal submatrix} of $A \in \R^{n \times n}$ is the matrix
+obtained by choosing a non-empty subset $S \subseteq [n]$ and keeping
+precisely those rows and columns of $A$ indexed by $S$.
+
+We will over the course of the course prove most of the following.
+\begin{theorem}
+    The following are equivalent for $A \in \R^{n \times n}$.
+    \begin{enumerate}
+        \item $A$ is PSD.
+        \item All eigenvalues of $A$ are in $[0, \infty)$.
+        \item $A = B^T B$ for some $B \in \R^{n \times n}$.
+        \item All principal submatrices of $A$ have non-negative
+            determinants.
+        \item $A$ is a Gram matrix from $\R^n$.
+        \item $A$ is the covariance matrix of some data.
+        \item $A$ is the Cayley-Menger matrix of an $(n + 1)$-point
+            Euclidean metrix space $X \subseteq (\R^n, \norm{\cdot}_2)$.
+    \end{enumerate}
+\end{theorem}
+PSDs show up in many places, such as
+\begin{itemize}
+    \item Nevanlinna-Pick condition,
+    \item classifying Dynkin diagrams of something something,
+    \item much earlier, using Hessians to find local minima.
+\end{itemize}
+
+Traditionally, authors like Rajendra~Bhatia consider functions of the form
+$f(A) = f(U \Lambda U^T) = U f(\Lambda) U^T$.
+Why?
+\begin{itemize}
+    \item $A^2 = U \Lambda^2 U^T$.
+        $A^3 = U \Lambda^3 U^T$, et cetera.
+    \item For a polynomial $p(x) = \sum_{i=0}^d a_i x^i$, then
+        $p(A) = U p(\Lambda) U^T$.
+\end{itemize}
+As long as the eigenvalues are compactly supported, polynomials give good
+approximations to all continuous functions.
+This study is called (holomorphic) functional calculus.
+
+\textbf{In this course,} we will work with functions acting on the
+\emph{entries} of the matrix, that is, functions that look like \[
+    f[A] = (f(a_{ij}))_{ij}.
+\] For example, entrywise matrix multiplication of two PSD matrices is PSD,
+as we will see later.
+Entrywise calculus is not as well-developed.
+
+\begin{examples}
+    \item{} [(Toeplitz) cosine matrices]
+    Let $\theta_1, \dots, \theta_2 \in \R$ and set
+    $a_{ij} = \cos(\theta_i - \theta_j)$.
+    Then $A = u u^T + v v^T$ where \[
+        u = \begin{pmatrix}
+            \cos \theta_1 \\
+            \dots \\
+            \cos \theta_n
+        \end{pmatrix}, \qquad
+        v = \begin{pmatrix}
+            \sin \theta_1 \\
+            \dots \\
+            \sin \theta_n
+        \end{pmatrix}.
+    \] Thus $A$ is symmetric and $x^T A x \ge 0$ for all $x$.
+
+    A matrix is \emph{Toeplitz} if $a_{ij}$ depends only on $i - j$.
+    That is, $A$ looks like \[
+        \begin{pmatrix}
+            a_0 & a_{-1} & a_{-2} & a_{-3} \\
+            a_1 & a_0 & a_{-1} & a_{-2} \\
+            a_2 & a_1 & a_0 & a_{-1} \\
+            a_3 & a_2 & a_1 & a_0
+        \end{pmatrix}
+    \] If $\theta_1, \dots, \theta_n$ are in arithmetic progression, then
+    the cosine matrix discussed above is Toeplitz.
+
+    \item A \emph{Hankel} matrix is similar to a Toeplitz matrix, but
+    constant along the anti-diagonals: something like \[
+        \begin{pmatrix}
+            a_0 & a_1 & a_2 & a_3 \\
+            a_1 & a_2 & a_3 & a_4 \\
+            a_2 & a_3 & a_4 & a_5 \\
+            a_3 & a_4 & a_5 & a_6
+        \end{pmatrix}.
+    \] Choose $u_0 \in \R$ and define \[
+        H_{u_0} \coloneq \begin{pmatrix}
+            1 & u_0 & u_0^2 & u_0^3 & \cdots \\
+            u_0 & u_0^2 & u_0^3 & u_0^4 & \cdots \\
+            u_0^2 & u_0^3 & u_0^4 & u_0^5 & \cdots \\
+            u_0^3 & u_0^4 & u_0^5 & u_0^6 & \cdots \\
+            \vdots & \vdots & \vdots & \vdots & \ddots
+        \end{pmatrix}
+    \]
+    \begin{claim}
+        Any (finite) leading principal truncation of $H_{u_0}$ is PSD.
+    \end{claim}
+    \begin{proof}
+        Let the truncation have size $n + 1$.
+        Then \[
+            \begin{pmatrix}
+                1 & u_0 & \cdots & u_0^n \\
+                u_0 & u_0^2 & \cdots & u_0^{n+1} \\
+                \vdots & \vdots & \ddots & \vdots \\
+                u_0^n & u_0^{n+1} & \cdots & u_0^{2n}
+            \end{pmatrix} = \begin{pmatrix}
+                1 \\
+                u_0 \\
+                \vdots \\
+                u_0^n
+            \end{pmatrix} \begin{pmatrix}
+                1 & u_0 & \cdots & u_0^n
+            \end{pmatrix}
+        \] and hence is PSD.
+    \end{proof}
+
+    The \emph{Dirac $\delta$} measure at $u_0 \in \R$, denoted by
+    $\delta_{u_0}(x) = \delta_{u_0,x}$ satisfies \[
+        \int_\R f d\delta_{u_0} = f(u_0).
+    \]
+    The \emph{$k$-th moment} of a measure $\mu \ge 0$ on $\R$ is \[
+        s_k(\mu) \coloneq \int_\R x^k d\mu(x).
+    \] For example, \begin{align*}
+        \text{mass of } \mu &= s_0(\mu) = \int_\R d\mu, \\
+        \text{mean of } \mu &= s_1(\mu) / s_0(\mu) \text{ (if $s_0(\mu) > 0$)}, \\
+        \text{variance of } \mu &= s_2(\mu) - s_1(\mu)^2 \text{ (if $s_0(\mu) = 1$)}.
+    \end{align*}
+\end{examples}

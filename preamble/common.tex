@@ -1,0 +1,20 @@
+% \usepackage{parskip}
+\usepackage{lmodern} % https://tex.stackexchange.com/a/58088/295755
+\renewcommand\bfdefault{b}
+\usepackage{microtype}
+
+\newcommand\TODO[1][TODO]{\textcolor{Red}{#1}}
+
+\usepackage{amsmath}
+\newcommand\yesnumber{\stepcounter{equation}\tag{\theequation}}
+
+\ifundef{\chapter}{}{\providecommand\thechapter{\Roman{chapter}}}
+
+\usepackage{physics2}
+\usephysicsmodule{ab}
+
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{todonotes}

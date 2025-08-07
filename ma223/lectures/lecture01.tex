@@ -1,0 +1,127 @@
+\chapter*{The Course}
+\lecture{2025-08-04}{}
+
+\textbf{Teams Code:} \texttt{xr80svy}
+
+The course name should be ``Linear Functional Analysis''.
+\begin{center}
+    $X$ and $Y$ are vector spaces.
+    $T\colon X \to Y$ is a linear map.
+    Given $y \in Y$, we want to ``solve'', that is, find $x \in X$ such that
+    $Tx = y$.
+\end{center}
+All that changes from the linear algebra course is that the vector spaces
+need not be finite.
+
+\begin{examples}
+    \item $C(\R)$ may be an interesting infinite dimensional vector space.
+    \item $C([0, 1])$ and $C((0, 1))$ are different spaces.
+        For example, $\frac1x$.
+    \item $C^k([0, 1])$ and $C^k((0, 1))$ are similarly different.
+        The first is the set of functions on $[0, 1]$ which can be extended
+        to a $k$-times differentiable function on a slightly larger open
+        interval.
+\end{examples}
+The map $f \mapsto f'$ is a linear map between two infinite-dimensional
+vector spaces.
+``Solving'' in this context is solving linear PDEs.
+
+For determining whether a solution exists for all images, the determinant
+suffices in the finite-dimensional case.
+With infinite dimentsions, there's no hope.
+
+We could instead use the rank-nullity theorem.
+\begin{theorem}[Rank-Nullity] \label{thm:rank-nullity}
+    Let $X$ and $Y$ be finite dimensional vector spaces,
+    and let $T\colon X \to Y$ be a linear map.
+    Then \[
+        \dimn X = \nullity(T) + \rank(T),
+    \] where $\nullity(T)$ and $\rank(T)$ are the rank and nullity of $T$,
+    respectively.
+\end{theorem}
+Using this, we can do a lot.
+
+\begin{lemma}
+    $T$ is injective iff $\ker(T) = \set 0$.
+\end{lemma}
+\begin{proof}
+    If $T$ is injective, then $\ker T$ contains only the zero vector.
+    Conversely, if $\ker T = \set 0$, then for any $x \in X$,
+    $Tx = 0$ implies $x = 0$.
+\end{proof}
+
+\begin{proposition} \label{thm:surj-iff-inj}
+    Let $X$, $Y$ be vector spaces of dimension $n < \infty$.
+    Then a linear map $T\colon X \to Y$ is surjective iff it is injective.
+\end{proposition}
+\begin{proof}
+    Using rank-nullity, $\rank(T) = n$, and the only $n$-dimensional
+    subspace of $Y$ is $Y$ itself.
+    \begin{claim} \label{thm:full-dim-sub}
+        The only $n$-dimensional subspace of an $n$-dimensional vector space
+        is itself.
+    \end{claim}
+    \begin{subproof}
+        Let $V$ be an $n$-dimensional vector space with an $n$-dimensional
+        subspace $W$.
+        Assume there exists a $v \in V \setminus W$.
+        There exists a basis $\mcB$ of $V$ containing $v$.
+        Then $\mcB \setminus \set v$ is a basis of $W$, contradicting that
+        it is $n$-dimensional.
+    \end{subproof}
+\end{proof}
+
+But for infinite-dimensional vector spaces, \cref{thm:full-dim-sub} does not
+hold.
+In fact, neither does \cref{thm:surj-iff-inj}.
+The map $p \mapsto x p$ is an injective map over the space of polynomials,
+but is not surjective.
+
+\begin{definition}[$\ell^p$ spaces] \label{def:lp}
+    For any $1 \le p < \infty$, we define \[
+        \ell^p \coloneq \set{x \in \R^\N : \sum \abs{x_n}^p < \infty}.
+    \] We also define \begin{align*}
+        \ell^\infty &\coloneq \set{x \in \R^\N : \sup_n \abs{x_n} < \infty}, \\
+        C &\coloneq \set{x \in \R^\N : \lim_{n \to \infty} x_n \text{ exists}}, \\
+        C_0 &\coloneq \set{x \in \R^\N : \lim_{n \to \infty} x_n = 0}, \\
+        C_{00} &\coloneq \set{x \in \R^\N : x_n = 0 \text{ for all but finitely many } n}.
+    \end{align*}
+\end{definition}
+On the set of sequences, we have natural shift operatiors \begin{align*}
+    S_R(x_1, x_2, \dots) &\coloneq (0, x_1, x_2, \dots), \\
+    S_L(x_1, x_2, \dots) &\coloneq (x_2, x_3, \dots).
+\end{align*}
+These are both linear maps.
+The first is injective but not surjective, while the second is surjective
+but not injective.
+Moreover, $S_L \circ S_R = \id$, but \[
+    (S_R \circ S_L)(x_1, x_2, \dots) = (0, x_2, \dots).
+\]
+
+We are fucked.
+\begin{theorem}
+    Let $X = Y = \R^d$ and $T\colon X \to Y$ be a linear map.
+    Suppose
+    \begin{enumerate}[label=(H\arabic*)]
+        \item{} [Approximate solvability] \label{hyp:approx-solv}
+            For every $y \in Y$, there exists a sequence $(x_n)_n$ in $X$
+            such that $T x_n \to y$ in the Euclidean sense.
+        \item{} [Quantitative injectivity] \label{hyp:quant-inj}
+            There exists a constant $C > 0$ such that
+            $\norm{x} \le C \norm{Tx}$.
+    \end{enumerate}
+    Then $T$ is surjective.
+\end{theorem}
+Note that the second hypothesis immediately provides injectivity, since
+if $Tx = 0$, then $\norm{x} \le C \norm{Tx} = 0$.
+\begin{proof}[Proof 1 (local compactness)]
+    Let $y \in Y$.
+    Then there is a sequence $(x_n)_n$ such that $Tx_n \to y$.
+    By \cref{hyp:quant-inj}, we have that $\norm{x_n}$ are uniformly
+    bounded.
+    Thus the sequence $(x_n)_n$ admits a subsequential limit
+    $x = \lim_{k \to \infty} x_{n_k}$.
+    Then \[
+        \norm{Tx - y} \le \norm{Tx - Tx_{n_k}} + \norm{Tx_{n_k} - y} \to 0.
+    \] Thus $Tx = y$.
+\end{proof}

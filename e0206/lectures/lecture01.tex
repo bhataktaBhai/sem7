@@ -1,0 +1,93 @@
+\chapter*{The course}
+\lecture{2025-08-06}{}
+
+\textbf{Instructor:} Anand Louis
+\\[1em]
+\textbf{Evaluation:}
+\begin{itemize}
+    \item[(35\%)] Roughly one homework every two weeks
+    \item[(25\%)] Study project
+    \item[(40\%)] Final exam
+\end{itemize}
+
+\begin{center}
+    Tools which are generally useful in theoretical computer science
+\end{center}
+
+\chapter{Probabilistic methods} \label{chp:prob}
+\begin{proposition} \label{thm:half-cut}
+    In any graph $G = (V, E)$, there is a cut $S \subseteq V$ such that
+    $\abs{E(S, V \setminus S)} \ge \frac12 \abs{E}$.
+\end{proposition}
+I will call such cuts half-cuts.
+\begin{proof}
+    Pick a uniform random set $S \subseteq V$.
+    Each vertex is in $S$ with probability $1 / 2$.
+    Thus each edge is in $E(S, V \setminus S)$ with probability $1 / 2$.
+    The expected value of $E(S, V \setminus S)$ is thus $\frac12 \abs{E}$.
+    Therefore, there exists a subset of vertices for which this
+    quantity is at least $\frac12 \abs{E}$.
+\end{proof}
+We've used the following.
+\begin{lemma}
+    For any random variable $X$, \[
+        \Pr(X \ge \E X) > 0.
+    \]
+\end{lemma}
+\begin{proof}
+    Assume the contrary.
+    Then $\E[X] - X > 0$ almost surely.
+    By positivity, the equality in $\E[\E[X] - X] \ge 0$ holds iff
+    $\E[X] - X = 0$ almost surely.
+    Contradiction.
+\end{proof}
+
+We can do slightly better than \cref{thm:half-cut}.
+\begin{proposition}
+    Let $S$ be a random cut of $G = (V, E)$
+    and $X = \abs{E(S, V \setminus S)}$.
+    Then $\Pr(X \ge (1 - \delta) \E[X]) \ge \frac{\delta}{1 + \delta}$.
+\end{proposition}
+\begin{proof}
+    Let $Y = \abs{E} - X \ge 0$.
+    Now $X \le (1 - \delta) \E[X]$ is equivalent to
+    $Y \ge \abs E - \frac{1 - \delta}2 \abs E = \frac{1 + \delta}2 \abs E$.
+    Since $\E[Y] = \frac12 \abs{E}$, Markov's inequality gives \[
+        \Pr \set*{Y \ge \frac{1 + \delta}{2} \abs{E}}
+            \le \frac1{1 + \delta}.
+    \] Thus $\Pr(X > (1 - \delta) \E X) \ge \frac{\delta}{1 + \delta}$.
+\end{proof}
+
+Thus, for any $\delta > 0$ and $\eps > 0$, we can sample a random cut
+$\log_{1 + \delta} \eps^{-1}$ times so that the largest of these cuts has
+size at least $(1 - \delta) \frac{\abs{E}}2$ with probability at least
+$1 - \eps$.
+If we choose $\delta$ such that $(1 - \delta) \frac{\abs E}{2}
+> \frac{\abs E - 1}{2}$, we get a half-cut.
+
+\section{Derandomization} \label{sec:derandomization}
+We can derandomize the algorithm discussed previously.
+Label the vertices $1$ through $n$.
+\begin{align*}
+    \frac{\abs E}{2} = \E[X]
+        &= \frac12 \E[X \mid 1 \in S] + \frac12 \E[X \mid 1 \notin S]
+    \intertext{At least one of these has to be at least $\E X$.
+    In this case, by symmetry, both are equal.}
+    \E[X] &= \E[X \mid 1 \in S] \\
+        &= \frac12 \E[X \mid 1 \in S, 2 \in S] + \frac12 \E[X \mid 1 \in S, 2 \notin S].
+\end{align*}
+Let $X_i$ denote whether $i \in S$ or $i \notin S$.
+If we could compare $\E[X \mid X_1, \dots, X_k, k + 1 \in S]$
+and $\E[X \mid X_1, \dots, X_k, k + 1 \notin S]$, we would get an algorithm.
+Writing $X$ as $\sum_{u, v} \1{u,v \text{ cross the cut}}$.
+Taking the difference of both conditional expectations shows that
+adding $k + 1$ locally greedily to one of $S$ and $V \setminus S$ has the
+greater expectation of $X$.
+This gives a linear time algorithm.
+
+\begin{exercise}[Local search for half-cut]
+    Start with an arbitrary cut $S_0 \subseteq V$.
+    If there is a vertex $v \in V$ such that moving it to the other side
+    increases the (edge-)size of the cut, do it.
+    This process terminates and yields a half-cut.
+\end{exercise}

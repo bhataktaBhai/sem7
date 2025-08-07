@@ -1,0 +1,20 @@
+# MacOS thingy
+.DS_Store
+# LaTeX stuff
+**/*.log
+**/*.out
+**/*.toc
+**/*.lec
+**/*.hw
+**/*.fdb_latexmk
+**/*.fls
+**/*.synctex*
+**/*.aux
+**/*.dvi
+# The temporary PDFs are only useful when writing
+**/main.pdf
+# PDFs etc that are already online
+**/texts/
+**/prof/
+# Assigments must of course be hidden until submission date
+**/assignments/

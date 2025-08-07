@@ -1,0 +1,216 @@
+\chapter*{The course}
+\lecture{2025-08-06}{}
+
+\textbf{Instructor:} Chandan Saha
+\\[1em]
+\textbf{Resources:}
+% Computational Complexity - A Modern Approach by Sanjeev Arora and Boaz Barak
+% (We'll closely follow this book)
+% Computational Complexity Theory by Steven Rudich and Avi Wigderson (Editors)
+% Mathematics and Computation by Avi Wigderson
+% Boolean Function Complexity by Stasys Jukna
+% Gems of Theoretical Computer Science by Schoening and Pruim
+% The Nature of Computation by Moore and Mertens
+% The Complexity Theory Companion by Hemaspaandra and Ogihara
+% Online lecture notes... (take a look at this webpage)
+\begin{enumerate}
+    \item \href{https://www.cs.princeton.edu/theory/complexity/}{Computational Complexity: A Modern Approach}
+        by Sanjeev Arora and Boaz Barak \\
+        (We'll closely follow this book)
+    \item Computational Complexity Theory by Steven Rudich and Avi Wigderson
+        (Editors)
+    \item \href{https://www.math.ias.edu/files/Book-online-Aug0619.pdf}{Mathematics and Computation}
+        by Avi Wigderson
+    \item Boolean Function Complexity by Stasys Jukna
+    \item Gems of Theoretical Computer Science by Schoening and Pruim
+    \item The Nature of Computation by Moore and Mertens
+    \item The Complexity Theory Companion by Hemaspaandra and Ogihara
+    \item Online lecture notes\dots{}
+        (take a look at \href{https://www.cs.cmu.edu/~odonnell/complexity/}{this} webpage)
+\end{enumerate}
+\vspace{1em}
+\textbf{Evaluation:}
+\begin{itemize}
+    \item[(45\%)] Three assignments, one posted at the end of each month,
+        with two weeks for completion.
+        The submission will be via email, as a \LaTeX-generated PDF file.
+        You may freely use all resources and tools, and confer with each
+        other, so long as you list these out.
+    \item[(25\%)] Midterm exam
+    \item[(30\%)] Final exam
+\end{itemize}
+
+\begin{center}
+    Classify computational problems based on the amount of resources
+    required by algorithms to solve them.
+\end{center}
+
+\section*{Problems}
+Problems come in various flavors.
+\begin{description}
+    \item[Decision problem] \leavevmode
+    \item[Search problem] \leavevmode
+        \begin{itemize}
+            \item Search for a prime between $n$ and $2n$.
+        \end{itemize}
+    \item[Counting problem] \leavevmode
+        \begin{itemize}
+            \item Count the number of 
+        \end{itemize}
+    \item[Optimization problem] \leavevmode
+        \begin{itemize}
+            \item Find a minimum size \emph{vertex cover} in a graph.
+            \item Optimize a linear function subject to \emph{linear
+            inequality constraints}. (Linear programming)
+        \end{itemize}
+\end{description}
+
+\section*{Algorithms}
+Algorithms are methods for solving problems, studied via formal
+\emph{models of computation}, such as Turing machines.
+
+\section*{Resources}
+\begin{itemize}
+    \item \textbf{Time:} Number of bit operations
+    \item \textbf{Space:} Number of memory cells required
+    \item \textbf{Randomness:} Number of random bits used
+    \item \textbf{Communication:} Number of bits sent over a network
+\end{itemize}
+
+\section*{Roadmap}
+\begin{description}
+    \item[Structural complexity] The classes $\P$, $\NP$, $\coNP$,
+        $\NP$-completeness, et cetera.
+        The computation must be space bounded. \todo{huh?}
+        There is an entire polynomial hierarchy.
+        \begin{itemize}
+            \item How hard is it to check if the largest independent set in
+                $G$ has size $k$?
+            \item How hard is it to check if there is a circuit of size $k$
+                that computes the same Boolean function as a given
+                Boolean circuit?
+        \end{itemize}
+    \item[Circuit complexity] The internal workings of an algorithm can be
+        viewed as a \emph{Boolean circuit}, yet another nice combinatorial
+        model of computation closely related to Turing machines.
+        The size, depth and width of a circuit correspond to the sequential,
+        parallel and space somplexity, respectively, of the algorithm it
+        represents.
+
+        Proving $\P \ne \NP$ also reduces to showing circuit lower bounds,
+        that is, showing the existence of Boolean functions that are hard to
+        compute by small circuits.
+    \item[Randomness] We get probabilistic complexity classes such as
+        $\BPP$, $\RP$, $\coRP$, et cetera.
+
+        Access to random bits can help improve computational complexity,
+        but to what extent?
+        Quicksort has expected running time $\Theta(n \log n)$, but
+        worst-case time $\Theta(n^2)$.
+    \item[Counting complexity] The class $\sP$.
+        \begin{itemize}
+            \item How hard is it to count the number of perfect matchings
+                in a graph?
+            \item How hard is it to count the number of cycles in a graph?
+        \end{itemize}
+    \item[Approximation]
+        A hardness of approximation result looks like the following.
+        \begin{theorem}[Hastad, 1997]
+            If there exists, for some $\eps > 0$, a polynomial-time
+            algorithm to compute an assignment that satisfies at least
+            $7/8 + \eps$ fraction of the clauses of an input $3\SAT$,
+            then $\P = \NP$.
+        \end{theorem}
+        In contrast, there is a polynomial-time algorithm to compute an
+        assignment that satisfies at least $7/8$ fraction of the clauses.
+
+        Another example is that of probabilistically checkable proofs
+        (PCPs).
+\end{description}
+
+\chapter{Turing machines} \label{chp:turing}
+Turing called them a-machines (automatic machines).
+Church, his doctoral advisor, named them after him.
+
+A turing machine consists of memory tape(s) and a finite set of rules.
+\begin{definition}
+    A $k$-tape Turing machine $M$ is described by a tuple
+    $(\Gamma, Q, \delta)$ such that
+    \begin{enumerate}
+        \item $M$ has $k$ one-sided memory tapes (input/work/output)
+            with \emph{heads};
+        \item $\Gamma$ is a finite alphabet, including a special
+            \emph{blank} symbol $\blank$.
+            Each memory cell contains an element of $\Gamma$.
+        \item $Q$ is a finite set of \emph{states} with two special states:
+            $q_0$ and $q_\infty$.
+        \item $\delta$ is a function from
+            $Q \times \Gamma^k \times \set{-1, 0, 1}^k$.
+    \end{enumerate}
+    The starting configuration is assumed to contain the inut string on the
+    input tape at its beginning, following by trailing $\blank$ symbols.
+    All other tapes contain only $\blank$s.
+    The heads are all positioned at the beginning of each tape.
+
+    A step of computation is performed by applying $\delta$.
+    Once the machine enters the state $q_\infty$, it halts computation.
+\end{definition}
+
+Let $f\colon \set{0, 1}^* \to \set{0, 1}^*$, $T\colon \N \to \N$ and
+$M$ a Turing machine on the alphabet $\set{0, 1}$.
+\begin{definition}[Computation and running time] \label{def:runtime}
+    $M$ computes $f$ if for every $x \in \set{0, 1}^*$,
+    $M$ halts with $f(x)$ on its output tape once began with $x$ on its
+    input tape.
+
+    This computation is in $T$ time if for every $x \in \set{0, 1}^*$,
+    $M$ halts within $T(\abs{x})$ steps.
+\end{definition}
+
+In this course, we will almost always deal with Turing machines that halt on
+every input, and computational problems that can be solved by a Turing
+machine.
+
+\begin{definition}[Time constructible function] \label{def:tcf}
+    A function $T\colon \N \to \N$ is \emph{time constructible} if
+    $T(n) \ge n$ and there is a Turing machine that computes the function
+    that maps $x$ (expressed in binary) to $T(\abs{x})$
+    (expressed in binary) in $O(T(\abs{x}))$ time.
+\end{definition}
+For example, $(\cdot)^2$, $2^\cdot$ and $(\cdot) \log (\cdot)$ are all
+time constructible.
+
+\begin{theorem}[Binary alphabets suffice] \label{thm:binary}
+    Let $f\colon 2^* \to 2^*$ and $T\colon \N \to \N$ be a time
+    constructible function.
+
+    If a Turing machine $M$ over an alphabet $\Gamma$, then
+    there exists another Turing machine $M'$ that computes $f$ in time
+    $4 \log_2 \abs{\Gamma} T(n)$ using $\set{0, 1, \blank}$ as the alphabet.
+\end{theorem}
+
+\begin{theorem}[One tape suffices] \label{thm:one-tape}
+    Let $f\colon 2^* \to 2^*$ and $T\colon \N \to \N$ be a time
+    constructible function.
+
+    If a Turing machine $M$ with $k$ tapes computes $f$ in $T(n)$, then
+    there exists a Turing machine $M'$ with $1$ tape that computes $f$ in
+    $k T(n)^2$ time.
+\end{theorem}
+
+\section{Universal Turing machine}
+Every Turing machine can be represented by a finite string over
+$\set{0, 1}$.
+Conversely, every string over $\set{0, 1}$ represents some Turing machine,
+by mapping initially invalid representations to the trivial Turing machine.
+Finally, if we allow padding with zeroes, each Turing machine has infinitely
+many representations.
+For a binary string $\alpha$, we will let $M_\alpha$ denote the Turing
+machine encoded by it.
+
+\begin{theorem}[Universal Turing machine] \label{thm:utm}
+    There exists a Turing machine $U$ that computes $M_\alpha(x)$ for
+    every input $\alpha\vert x$.
+\end{theorem}
+Modern day electronic computers are physical realizations of universal
+Turing machines.

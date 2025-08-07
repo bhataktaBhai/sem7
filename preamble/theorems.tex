@@ -1,0 +1,203 @@
+\usepackage{amsmath}
+\usepackage{amsthm}
+\colorlet{exercise}{cyan!70!black}
+\colorlet{solved}{green!40!black}
+\colorlet{self_proof}{blue!70!black}
+\colorlet{Red}{red!80!black}
+
+% placing these imports below the theorem definitions leads to every theorem
+% being referred as `theorem' in spite of the \crefname's.
+\usepackage{hyperref}
+\usepackage[noabbrev]{cleveref}
+
+% Gilles Castel's theorems
+\newtheoremstyle{mddefinition}% <name>
+  {-.25\topsep}%             <space above>
+  {-.25\topsep}%             <space below>
+  {\normalfont}%             <body font>
+  {}%                        <indent amount>
+  {\bfseries}%               <theorem head font>
+  {.}%                       <punctuation after theorem head>
+  {.5em}%                    <space after theorem head>
+  {}%                        <theorem head spec>
+\newtheoremstyle{mdplain}% <name>
+  {-.25\topsep}%             <space above>
+  {-.25\topsep}%             <space below>
+  {\itshape}%                <body font>
+  {}%                        <indent amount>
+  {\bfseries}%               <theorem head font>
+  {.}%                       <punctuation after theorem head>
+  {.5em}%                    <space after theorem head>
+  {}%                        <theorem head spec>
+
+\usepackage[framemethod=Tikz]{mdframed}
+\mdfsetup{skipbelow=0pt}
+\mdfdefinestyle{defstyle}{
+    outerlinewidth = 1,
+    roundcorner = 2,
+    leftmargin = 7,
+    rightmargin = 7,
+    backgroundcolor = green!4
+}
+\mdfdefinestyle{thmstyle}{
+    outerlinewidth = 1,
+    roundcorner = 8,
+    leftmargin = 7,
+    rightmargin = 7,
+    backgroundcolor = cyan!5
+}
+\ifundef\chapter{%
+    \providecommand\theoremnumberwithin{section}
+    \theoremstyle{plain}
+    \newtheorem{theorem}{Theorem}%[\theoremnumberwithin]
+
+    \newcounter{assignment}
+    \theoremstyle{definition}
+    \newtheorem{problem}{Problem}
+    \theoremstyle{mddefinition}
+    \newmdtheoremenv[nobreak=true, outerlinewidth=0.7]{problem*}[problem]{Problem}
+}{
+    \providecommand\theoremnumberwithin{chapter}
+    \theoremstyle{plain}
+    \newtheorem{theorem}{Theorem}[\theoremnumberwithin]
+
+    \newcounter{assignment}
+    \theoremstyle{definition}
+    \newtheorem{problem}{Problem}[assignment]
+    \theoremstyle{mddefinition}
+    \newmdtheoremenv[nobreak=true, outerlinewidth=0.7]{problem*}[problem]{Problem}
+}
+\theoremstyle{mddefinition}
+\newmdtheoremenv[nobreak=true, style=defstyle]{definition*}[theorem]{Definition}
+
+\theoremstyle{mdplain}
+\newmdtheoremenv[nobreak=true, style=thmstyle]{theorem*}[theorem]{Theorem}
+\newmdtheoremenv[nobreak=true]{proposition*}[theorem]{Proposition}
+\newmdtheoremenv[nobreak=true]{lemma*}[theorem]{Lemma}
+\newmdtheoremenv[nobreak=true]{corollary*}[theorem]{Corollary}
+\newmdtheoremenv[nobreak=true, style=thmstyle]{fact*}[theorem]{Fact}
+\newmdtheoremenv[nobreak=true]{exercise*}[theorem]{Exercise}
+\newmdtheoremenv[nobreak=true]{question*}[theorem]{Question}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{plain}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{lemma}{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{question}[theorem]{Question}
+\newtheorem*{claim}{Claim}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{remarkx}{Remarks}
+\newtheorem*{example}{Example}
+\newtheorem*{examplex}{Examples}
+\newtheorem*{idea}{Idea}
+%%%% HAXXXXXX %%%%
+% \def\innerqed{\qedsymbol}
+% \def\outerqed{$\blacksquare$}
+\let\oldproof\proof
+\let\endoldproof\endproof
+\newenvironment{solution}[1][]
+  {\renewcommand\qedsymbol{$\blacksquare$}%
+  \begin{oldproof}[\ifx&#1&Solution\else#1\fi]}
+  {\end{oldproof}}
+\newenvironment{answer}
+  {\renewcommand\qedsymbol{$\blacksquare$}\begin{oldproof}[Answer]}
+  {\end{oldproof}}
+\renewenvironment{proof}
+  {\renewcommand\qedsymbol{$\blacksquare$}\begin{oldproof}}
+  {\end{oldproof}}
+\newenvironment{subproof}[1][\proofname]{%
+  \renewcommand{\qedsymbol}{$\square$}\begin{oldproof}[#1]}
+  {\end{oldproof}}
+\newtheorem*{notation}{Notation}
+
+% <cref>
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{axiom}{axiom}{axioms}
+\crefname{definition}{definition}{definitions}
+\crefname{problem}{problem}{problems}
+\crefname{exercise}{exercise}{exercises}
+\crefname{fact}{fact}{facts}
+\crefname{question}{question}{questions}
+\crefname{remark}{remark}{remarks}
+\crefname{example}{example}{example}
+\crefname{notation}{notation}{notations}
+\crefname{claim}{claim}{claims}
+% \crefname{section}{\S}{\S\S}
+\crefname{theorem*}{theorem}{theorems}
+\crefname{proposition*}{proposition}{propositions}
+\crefname{lemma*}{lemma}{lemmas}
+\crefname{corollary*}{corollary}{corollaries}
+\crefname{definition*}{definition}{definitions}
+\crefname{problem*}{problem}{problems}
+\crefname{exercise*}{exercise}{exercises}
+\crefname{fact*}{fact}{facts}
+\crefname{question*}{question}{questions}
+% </cref>
+
+% <hyperlinks>
+\hypersetup{colorlinks,
+    linkcolor={blue},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}}
+% </hyperlinks>
+
+\usepackage[shortlabels,inline]{enumitem}
+% change default label for enumerate, and fix long labels popping out
+\setlist[enumerate,1]{label*=(\arabic*),ref=(\arabic*),leftmargin=*}
+% casework list using https://tex.stackexchange.com/a/30035
+\newcounter{casecount}
+\newlist{casework}{description}{1}
+\setlist[casework]{%
+  before={\setcounter{casecount}{0}%
+      \renewcommand*\thecasecount{\arabic{casecount}}}%
+  ,font=\bfseries Case \stepcounter{casecount}\thecasecount:
+}
+
+\newenvironment{examples}[1][]
+{\begin{examplex}[#1]\leavevmode\begin{itemize}}{\end{itemize}\end{examplex}}
+\newenvironment{remarks}[1][]
+{\begin{remarkx}[#1]\leavevmode\begin{itemize}}{\end{itemize}\end{remarkx}}
+
+% omg this is so HaXy
+% \renewenvironment{proof}[1][\proofname]{{\it\bfseries #1. }}{\qed}
+% \providecommand{\qedsymbol}{\openbox}
+% \makeatletter
+% \renewenvironment{proof}[1][\proofname]{\par
+%   \pushQED{\qed}%
+%   \normalfont \topsep6\p@\@plus6\p@\relax
+%   \trivlist
+%   \item[\hskip\labelsep
+%         \itshape\bfseries%this is the change (boldface instead of italics)
+%         % \fontseries{bx}\selectfont
+%     #1\@addpunct{.}]\ignorespaces
+% }{%
+%   \popQED\endtrivlist\@endpefalse
+% }
+\makeatother
+\crefname{enumi}{part}{parts}
+\crefname{enumii}{part}{parts}
+\crefname{enumiii}{part}{parts}
+\setlist[itemize]{itemsep=2pt}
+\newcounter{dummy}
+\makeatletter
+\newcommand\myitem[1][]{\item[#1]\refstepcounter{dummy}\def\@currentlabel{#1}}
+\makeatother
+
+\makeatletter
+\newcommand*{\refifdef}[3]{%label,command,fallback
+    \@ifundefined{r@#1}{#3}{#2{#1}}%
+}
+\newcommand*{\crefifdef}[2]{\refifdef{#1}{\cref}{#2}}
+\newcommand*{\Crefifdef}[2]{\refifdef{#1}{\Cref}{#2}}
+\makeatother

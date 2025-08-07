@@ -1,0 +1,136 @@
+\chapter*{The course}
+\lecture{2025-08-05}{}
+
+\textbf{Resources:}
+\begin{enumerate}
+    \item
+\end{enumerate}
+\vspace{1em}
+\textbf{Evaluation:}
+\begin{itemize}
+    \item
+\end{itemize}
+
+\begin{question}
+    Toss a fair coin $10000$ times.
+    How many heads do you expect to see?
+\end{question}
+Our expectation is $5000$.
+
+\begin{theorem*}[Weak law of large numbers] \label{thm:wlln}
+    If $X_1, X_2, \dots$ are iid random variables with finite mean and
+    variance, then $\frac1n \sum_{i=1}^n X_n \pto \E[X_1]$.
+    That is, for any $\epsilon > 0$, \[
+        \lim_{n \to \infty}
+            \P\set*{\abs*{\frac1n \sum_{i=1}^n X_i - \E[X_1]} > \epsilon} = 0.
+    \]
+\end{theorem*}
+The finite variance assumption is not necessary.
+
+For a fixed $\eps$, the error bound on $S_n$ is $O(n)$.
+
+\begin{theorem}[Central limit theorem] \label{thm:clt}
+    If $X_1, X_2, \dots$ are iid random variables with finite mean $\mu$
+    and variance $\sigma$, then \[
+        \frac1{\sqrt n} (\sum_{i=1}^n (X_i - \mu)) \dto N(0, \sigma^2).
+    \]
+\end{theorem}
+Using this, once more, we have that the number of heads is
+$5000 \pm \sqrt{10000 (\frac14)} Q^{-1}(0.005)$ with probability
+at least $0.99$, if we assume that $10000 = \infty$,
+where $Q(x) = \P(Z \ge x)$ for $Z \sim N(0, 1)$.
+$Q^{-1}(0.005) \approx \sqrt(-\log 0.005)$.
+The uncertainty here happens to be around $115$ tosses.
+
+We will eventually see the Berry-Esseen theorem.
+\begin{theorem}[Berry-Esseen inequality] \label{thm:berry}
+    If $X_1, X_2, \dots$ are iid with zero mean and finite \textbf{third}
+    moment, then there exists a constant $C$ such that for each
+    $n$ and $\eps$, \[
+        \abs*{\P \set*{\frac1{\sigma \sqrt n} \sum_{i=1}^n X_i > \eps}
+            - Q(\eps)} \le \frac{C}{\sqrt n},
+    \]
+\end{theorem}
+The constant here is known to be between $0.4$ and $0.5$.
+
+\begin{theorem}[Large deviations] \label{thm:ldev}
+    For every interval $A \subseteq \R$, \[
+        \lim_{n \to \infty} -\frac1n \log \P\set*{\frac1n \sum_{i=1}^n X_i \in A}
+            = \inf_{x \in A} I(x),
+    \] where $I(\cdot)$ is the \emph{rate function}.
+\end{theorem}
+Thus assuming $10000 = \infty$, we can say that for $x > \frac12$, \[
+    \P(S_n > n x) = \exp(-n I(x)).
+\] We have written $I(x)$ in place of $\inf_{y > x} I(y)$ because $I$
+happens to be decreasing in this case.
+
+These were largely asymptoptic results.
+The two simplest concentration inequalities are non-asymptotic.
+\begin{theorem}[Markov's inequality] \label{thm:markov}
+    If $X$ is a non-negative random variable, then for any $t > 0$, \[
+        \P(X \ge t) \le \frac{\E[X]}{t}.
+    \]
+\end{theorem}
+\begin{theorem}[Chebyshev's inequality] \label{thm:cheby}
+    If $X$ is a random variable with finite variance,
+    then for any $\delta > 0$, \[
+        \P(\abs{X - \mu} \ge \delta) \le \frac{\sigma^2}{\delta^2}.
+    \]
+\end{theorem}
+Chebyshev's inequaity gives that the number of heads is
+$5000 \pm \sqrt{\frac{2500}{0.01}}$ with probability at least $0.99$.
+(The uncertainty is $500$ tosses.)
+
+In general, CLT and Chebyshev's inequality give results \begin{align*}
+    &n \E X_1 \pm \sqrt{n \Var X_1} \sqrt{\log \frac2\delta}, \\
+    \text{and } &n \E X_1 \pm \sqrt{n \Var X_1} \sqrt{\frac1\delta}
+\end{align*}
+with probability at least $1 - \delta$, repectively.
+
+The Chernoff bound, for iid Bernoulli random variables, gives \[
+    n \E X_1 \pm C \sqrt{n \Var X_1} \sqrt{\log \frac1\delta}
+\] for some constant $C$.
+
+\section*{Roadmap}
+We'll study Chernoff and Cram\'er bounds, which lead to Hoeffding's,
+Bennett's and Bernstein's inequalities.
+
+We'll look at the coupon collector's problem.
+
+Another question with applications in bioinformatics and
+\texttt{git diff}ing is the following.
+\begin{question}
+    Given two iid finite sequences $(X_1, \dots, X_n)$ and
+    $(Y_1, \dots, Y_n)$, what is the length of a longest common subsequence?
+
+    A \emph{common subsequence} of length $k$ is a sequence of length $k$
+    that is a (not necessarily contiguous) subsequence of both $X$ and $Y$.
+\end{question}
+
+\begin{theorem}[Talagrand's principle] \label{thm:tal}
+    A random variable that depends smoothly on a large number of random
+    variables satisfies Chernoff-type bounds.
+\end{theorem}
+
+\subsection*{Methods}
+\begin{itemize}
+    \item Chernoff-type bounds
+    \item Tensorization techniques to break a function of
+    random variables into its constituents using the
+    \begin{enumerate*}
+        \item martingale,
+        \item Effron-Stein, and
+        \item entropy methods.
+    \end{enumerate*}
+    \item Applying isoperimetric inequalities to probability spaces.
+    \item Transportation method
+\end{itemize}
+
+\subsection*{Applications}
+\begin{itemize}
+    \item Johnson-Lindenstrauss lemma
+    \item Hypercontractivity
+    \item Bounds on the performance of LASSO
+    \item Blowing-up lemmas
+    \item Bin-packing, coupon collector, birthday paradox, LCS, et cetera.
+\end{itemize}
