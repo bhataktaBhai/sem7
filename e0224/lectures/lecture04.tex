@@ -1,0 +1,95 @@
+\lecture{2025-08-18}{}
+\begin{examples}
+    \item Square root mod: Given $a, b, c \in \Z_+$, check if there exists a
+        natural number $x \le c$ such that $x^2 = a \pmod b$.
+        This is $\NP$-complete.
+    \item A variant of integer factoring:
+        Given $L, U, N \in \Z_+$, check if there exists a 
+        \emph{natural number} $d \in [L, U]$ such that $d \mid N$.
+        This is $\NP$-hard under randomized Karp reductions.
+    \item Minimum circuit size problem (MCSP):
+        Given the truth table of a Boolean function $f$ and an integer $s$,
+        check if there is a circuit of size at most $s$ that computes $f$.
+        This is in $\NP$.
+
+        Is it $\NP$-complete? Who knows!?
+        Levin (or was it Cook?) delayed his publication by a year or two
+        trying to prove that it is, but we don't have an answer yet.
+        [ILO20] showed that the multi-output version is $\NP$-hard under
+        polynomial-time randomized reductions.
+        [Hira22] showed the same for the partial function version.
+\end{examples}
+
+\begin{theorem}[Independent set] \label{thm:is-npc}
+    Deciding whether a graph $G$ has an independent set of size $k$ is
+    $\NP$-complete.
+\end{theorem}
+We will reduce $\eSAT$ to $\INDSET$.
+\begin{proof}
+    Let $\phi$ be a $3$CNF with $m$ clauses and $n$ variables.
+    Assume that every clause has exactly $3$ literals.
+    Associate with each such clause a clique of size $2^3 - 1 = 7$.
+    Each vertex denotes a partial assignment: an assignment of the three
+    literals that satisfies this clause.
+
+    This gives $m$ cliques $C_1, \dots, C_m$ consisting of $7$ vertices
+    each.
+    Each vertex denotes a partial assignment to the literals involved.
+    Draw an edge between any two vertices which correspond to incompatible
+    Boolean assignments.
+    Call the resultant graph $G$.
+
+    $\phi$ is satisfiable iff $G$ has an independent set of size $m$.
+    \begin{itemize}
+        \item If $G$ has such an independent set, it must have exactly one
+            vertex from each of $C_1, \dots, C_k$.
+            Since these are all compatible with each other, this yields
+            a global assignment.
+            Since each partial assignment satisfies the corresponding
+            clause, so does the global assignment.
+    \end{itemize}
+\end{proof}
+
+\begin{theorem}[Clique] \label{thm:clique-npc}
+    Deciding whether a graph $G$ has a $k$-clique is $\NP$-complete.
+\end{theorem}
+\begin{proof}
+    $G$ has a $k$-clique iff $\wbar{G}$ has an independent set of size
+    $k$.
+    Thus $\INDSET$ reduces to this problem.
+\end{proof}
+
+\begin{theorem}[Vertex cover] \label{thm:vertex-cover-npc}
+    Deciding whether a graph $G$ has a vertex cover of size $k$ is
+    $\NP$-complete.
+\end{theorem}
+\begin{proof}
+    $G$ has a vertex set of size $k$ iff $G$ has an independent set of size
+    $n - k$.
+    Again $\INDSET$ reduces to this problem.
+\end{proof}
+
+\begin{theorem}[$0/1$ integer programming] \label{thm:bit-programming-npc}
+    A $0/1$ integer program is a set of affine inequalities with rational
+    coefficients where the variable lie in $\set{0, 1}$.
+
+    The set of satisfiable $0/1$ integer programs is $\NP$-complete.
+\end{theorem}
+\begin{proof}
+    $\eSAT$ reduces naturally to bit programming.
+    A clause $x_1 \lor \neg x_2 \lor x_3$ maps to the inequality
+    $x_1 + (1 - x_2) + x_3 \ge 1$.
+\end{proof}
+
+\begin{theorem}[Max cut] \label{thm:max-cut-nph}
+    Given a graph, finding a cut with the maximum size is $\NP$-hard.
+\end{theorem}
+We are not stating that it is $\NP$-complete because, the way we have stated
+it, $\NP$ only consists of decision problems.
+\begin{proof}
+    We showed that the decision problem $\mathsf{VCover}$ is $\NP$-hard.
+    Thus the optimization version $\mathsf{MinVCover}$, finding a minimal
+    vertex cover, is $\NP$-hard.
+    We will now reduce $\mathsf{MinVCover}$ to $\mathsf{MaxCut}$.
+\end{proof}
+\todo{I left the lecture room at this point.}

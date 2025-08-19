@@ -1,0 +1,196 @@
+\lecture{2025-08-07}{}
+\begin{proposition}
+    Let $\mu$ be a non-negative measure on $\R$ such that
+    $s_k(\mu) = \int_\R x^k d\mu$ converges for all $k$.
+    Then $H_\mu \coloneq (s_{i+j}(\mu))_{i,j \ge 0}$
+    is PSD.
+\end{proposition}
+\begin{proof}
+    Let \[
+        H_n = \begin{pmatrix}
+            s_0 & \dots & s_n \\
+            \vdots & \ddots & \vdots \\
+            s_n & \dots & s_{2n}
+        \end{pmatrix}.
+    \] We need to show that $u^T H_n u \ge 0$ for all $u$.
+    Write \begin{align*}
+        u^T H_n u &= \sum_{i,j=0}^n u_i s_{i+j}(\mu) u_j \\
+            &= \sum_{i,j} \int_\R u_i x^{i+j} u_j d\mu(x) \\
+            &= \int_\R \ab(\sum_i u_i x^i)^2 d\mu(x) \ge 0. \qedhere
+    \end{align*}
+\end{proof}
+\begin{examples}
+    \item If $\mu = \delta_{-\pi} + 2 \delta_3$, then
+        $s_k(\mu) = (-\pi)^k + 2 \cdot 3^k$.
+        Therefore, \[
+            \begin{pmatrix}
+                3 & 6 - \pi & 18 + \pi^2 & \dots \\
+                6 - \pi & 18 + \pi^2 & \ddots & \dots \\
+                18 + \pi^2 & \ddots & \ddots & \dots \\
+                \vdots & \vdots & \vdots & \ddots
+            \end{pmatrix}
+        \] is PSD.
+    \item \emph{Gram matrices} from $\R^r$ are PSD.
+        Given $x_1, \dots, x_n \in \R^r$, their Gram matrix is \[
+            G(x_1, \dots, x_n) \coloneq (\innerp{x_i}{x_j})_{i,j=1}^n
+        \]
+\end{examples}
+\begin{proposition} \label{thm:gram-rank}
+    The Gram matrix $G(x_1, \dots, x_n)$ where $x_i \in \R^r$ has rank at
+    most $r$.
+\end{proposition}
+\begin{proof}
+    Given $u = (u_1, \dots, u_n)^T \in \R^n$, \begin{align*}
+        u^T G u &= \sum_{i,j=1}^n u_i \innerp{x_i}{x_j} u_j \\
+            &= \sum_{i,j} \innerp{u_i x_j}{u_j x_j} \\
+            &= \innerp*{\sum_i u_i x_j}{\sum_j u_j x_j} \ge 0.
+    \end{align*}
+
+    To show that the rank is at most $r$, write $G = X^T X$ where
+    $X = \begin{pmatrix}
+        x_1 & \dots & x_n
+    \end{pmatrix}$.
+    (This also immediately gives positive semidefiniteness.)
+    Now \[
+        \rank(G) = \rank(X^T X) \le \rank(X) \le r.
+    \] This bound is tight when, for example, $x_i = e_i$.
+\end{proof}
+
+\begin{theorem} \label{thm:pd-equiv}
+    The following are equivalent for symmetric $A \in \R^{n \times n}$.
+    \begin{enumerate}
+        \item $A$ is PD.
+        \item All eigenvalues of $A$ are in $(0, \infty)$.
+        \item $A = B^T B$ for some $B \in \R^{n \times n}$ and $A$ is full
+            rank.
+        \item $A$ is a Gram matrix $G(x_1, \dots, x_n)$ from $\R^n$ and
+            $x_i$ form a basis.
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof of \cref{thm:psd-equiv}] \leavevmode
+    \begin{description}
+        \item[\labelcref{thm:psd-equiv:1} $\implies$ \labelcref{thm:psd-equiv:2}]
+            If $Av = \lambda v$ for a non-zero $v$,
+            then $0 \le v^T A v = \lambda \norm{v}^2$ so $\lambda \ge 0$.
+            If $A$ is PD, then the inequality becomes strict.
+        \item[\labelcref{thm:psd-equiv:2} $\implies$ \labelcref{thm:psd-equiv:1}]
+            By the spectral theorem, $A = U^T \Lambda U$ where
+            $U \in O(n)$ and $\Lambda = \diag(\lambda_1, \dots, \lambda_n)$.
+            If $\lambda_i$ are non-negative, then \[
+                u^T A u = v^T \Lambda v = \sum_i \lambda_i v_i^2 \ge 0
+            \] where $v = U u$.
+            If all $\lambda_i$ are strictly positive, then the sum is
+            zero iff $v = 0$.
+        \item[\labelcref{thm:psd-equiv:3} $\implies$ \labelcref{thm:psd-equiv:1}]
+            If $A = B^T B$ then $u^T A u = \norm{B u}^2 \ge 0$.
+            If $A$ is full rank, then so is $B$.
+            Thus $\norm{B u}^2 = 0$ iff $u = 0$.
+        \item[\labelcref{thm:psd-equiv:4} $\implies$ \labelcref{thm:psd-equiv:3}]
+            % $x_1, \dots, x_n$ is given to be a basis.
+            % Thus, from the proof of \cref{thm:gram-rank},
+            % in $u^T G u \ge 0$ with equality iff $u = 0$.
+            In the proof of \cref{thm:gram-rank}, we wrote $G = X^T X$.
+
+            If $x_i$ form a basis, then $X^T$ and $X$ are both full rank
+            matrices, hence so is their product.
+        \item[\labelcref{thm:psd-equiv:2} $\implies$ \labelcref{thm:psd-equiv:4}]
+            By the spectral theorem, $A = U^T \Lambda U$.
+            % Let the eigenvalues be labelled in descending order,
+            % $r = \rank(A)$ of which are positive.
+            % Denote $\Lambda$ as $\begin{pmatrix}
+            %     \Lambda_1 & 0 \\
+            %     0 & 0
+            % \end{pmatrix}$ where $\Lambda_1 = \diag(\lambda_1, \dots, \lambda_r)$.
+            % Similarly write \[
+            %     U = \begin{pmatrix}
+            %         P & Q \\
+            %         R & S
+            %     \end{pmatrix}
+            % \] in block form to be compatible with $\Lambda$.
+            % Then \begin{align*}
+            %     U^T \Lambda U &=
+            %         \begin{pmatrix}
+            %             P^T & R^T \\
+            %             Q^T & S^T
+            %         \end{pmatrix} \begin{pmatrix}
+            %             \Lambda_1 & 0 \\
+            %             0 & 0
+            %         \end{pmatrix} \begin{pmatrix}
+            %             P & Q \\
+            %             R & S
+            %         \end{pmatrix} \\
+            %         % &= \begin{pmatrix}
+            %         %     P^T \Lambda_1 & 0 \\
+            %         %     Q^T \Lambda_1 & 0
+            %         % \end{pmatrix} \begin{pmatrix}
+            %         %     P & Q \\
+            %         %     R & S
+            %         % \end{pmatrix} \\
+            %         &= \begin{pmatrix}
+            %             P^T \Lambda_1 P & P^T \Lambda_1 Q \\
+            %             Q^T \Lambda_1 P & Q^T \Lambda_1 Q
+            %         \end{pmatrix} \\
+            %         &= \begin{pmatrix}
+            %             P^T \sqrt{\Lambda_1} \\
+            %             Q^T \sqrt{\Lambda_1}
+            %         \end{pmatrix} \begin{pmatrix}
+            %             P \sqrt{\Lambda_1} & Q \sqrt{\Lambda_1}
+            %         \end{pmatrix} \eqcolon X^T X
+            % \end{align*}
+            Since all eigenvalues are non-negative,
+            $A = (\sqrt \Lambda U)^T (\sqrt \Lambda U) \eqcolon X^T X$
+            is a Gram matrix.
+
+            If all eigenvalues are positive, $X$ has full rank, so its
+            columns form a basis.
+    \end{description}
+    To recap, we proved \[
+        \labelcref{thm:psd-equiv:1} \iff \labelcref{thm:psd-equiv:2}
+            \implies \labelcref{thm:psd-equiv:4}
+            \implies \labelcref{thm:psd-equiv:3}
+            \implies \labelcref{thm:psd-equiv:1}. \qedhere
+    \]
+\end{proof}
+
+\begin{corollary}
+    Given any real symmetric matrix $A_{n \times n}$, the matrix
+    $A - \lambda_{\text{min}}(A) \id_n$ is PSD.
+\end{corollary}
+
+A \emph{cone} in a vector space is a set $S$ such that $cS = S$
+for all $c > 0$.
+\begin{corollary}
+    $\PD_n$ is dense in $\PSD_n$.
+    Moreover, both of these are convex cones in $\R^{n^2}$.
+\end{corollary}
+\begin{proof}
+    Any matrix $A \in \PSD_n \setminus \PD_n$ can be approximated by the
+    sequence of matrices $(A + \frac1k \id_n)_{k \ge 1}$.
+    Each of these is in $\PD_n$.
+    This can be seen by definition and also by the eigenvalue
+    characterization.
+
+    Any positive scaling of a PSD (resp.{} PD) matrix is PSD
+    (resp.{} PD): $\PSD_n$ and $\PD_n$ are cones.
+    Sums of PSD (resp.{} PD) matrices are also PSD (resp.{} PD).
+    Thus the cones are convex.
+\end{proof}
+
+\begin{definition}
+    Given $A \in \R^{m \times n}$ and subsets $I \subseteq [m]$ and
+    $J \subseteq [n]$, define $A_{I \times J}$ to be the submatrix of $A$
+    whose rows and columns are indexed by $I$ and $J$ respectively.
+    (The indices come from $I$ and $J$.
+    $A$ if a function from $I \times J$ to $\R$.)
+    $A_{I \times J}$ is \emph{principal} if $I = J$
+
+    A \emph{minor} of $A$ is $\det(A_{I \times J})$ for some subsets
+    $I, J$ of equal sizes of $[m]$ and $[n]$ respectively.
+    It is \emph{principal} if $I = J$.
+\end{definition}
+
+\begin{theorem*}[Sylvester's criterion] \label{thm:sylv}
+    A real symmetric matrix $A$ is PSD (resp.{} PD)
+    iff all its principal minors are non-negative (resp.{} positive).
+\end{theorem*}

@@ -1,0 +1,116 @@
+\lecture{2025-08-12}{}
+In \cref{thm:topo-on-R} we had seen the standard topology on $\R$ defined as
+\[
+    \T = \set{V \subseteq \R : \forall x \in V, \text{ there exist }
+        a < x < b \text{ such that } (a, b) \in V}.
+\]
+\begin{proposition}
+    Each interval $(a, b)$ where $-\infty \le a < b \le \infty$ is open.
+\end{proposition}
+\begin{proof}
+    Trivial.
+\end{proof}
+
+\begin{theorem}
+    $\T$ is the set of unions of open intervals.
+    That is, \[
+        \T = \set*{\bigcup_{\alpha \in A} (a_\alpha, b_\alpha) :
+            \set{(a_\alpha, b_\alpha)}_{\alpha \in A} \text{ where }
+            a_\alpha, b_\alpha \in [-\infty, \infty]}
+    \]
+\end{theorem}
+\begin{proof}
+    Suppose $S \in \T$.
+    Then for each $x \in S$, we have $a_x < x < b_x$ such that
+    $(a_x, b_x) \in S$.
+    Thus $S = \bigcup_{x \in S} (a_x, b_x)$.
+
+    Conversely, if $S = \bigcup_{\alpha \in A} (a_\alpha, b_\alpha)$, then
+    for every $x \in S$ there is an $\alpha$ such that
+    $x \in (a_\alpha, b_\alpha) \subseteq S$.
+    Thus $S \in \T$.
+\end{proof}
+
+\begin{theorem*} \label{thm:disjoint-open}
+    Any open set $V \subseteq \R$ is the union of \emph{disjoint} open
+    intervals (allowing $\pm \infty$ as endpoints).
+\end{theorem*}
+We will cover multiple proofs for this.
+\begin{lemma*}
+    The class of equivalence relations on a set $S$ is closed under
+    arbitrary intersections.
+    Thus, for any relation $R \subseteq S \times S$, there exists a
+    minimal equivalence relation $E \subseteq S \times S$ containing $R$.
+\end{lemma*}
+\begin{proof}
+    All properties of equivalence relations are of the form
+    ``if $a R b$''-ish.
+    Thus, defining $\mcE$ to be the set of equivalence relations on $S$
+    containing $R$, their intersection gives what we desired.
+
+    Here is a concrete description for the minimal equivalence relation.
+    Declare $a \sim b$ iff there exists a finite sequence
+    $a = c_1, \dots, c_n = b$ such that for all $i \in [n]$, either
+    $c_1 R c_2$ or $c_2 R c_1$.
+    Then $\sim$ is the required minimal equivalence relation.
+    \begin{itemize}
+        \item This is trivially an equivalence relation containing $R$.
+        \item For every equivalence relation $E$ containing $R$, any two
+            elements connected by such a (finite) path must be related.
+            \qedhere
+    \end{itemize}
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:disjoint-open}]
+    Let $V = \bigcup_{\alpha \in A} (a_\alpha, b_\alpha)$.
+    Define the relation $R$ on $A$ by $(\alpha, \beta) \in R
+    \iff (a_\alpha, b_\alpha) \cap (a_\beta, b_\beta) \ne \O$.
+    Call its symmetric, reflexive closure $\sim$.
+    Let $\mcI = \set{\bigcup_{\alpha \in B} (a_\alpha, b_\alpha) : B \in A/{\sim}}$.
+
+    Each element of $\mcI$ is an interval since
+    $\bigcup_{\alpha \in B} (a_\alpha, b_\alpha) = (a, b)$
+    where $a = \inf_{\alpha \in B} a_\alpha$ and
+    $b = \inf_{\alpha \in B} b_\alpha$.
+    For any $a < x < b$, there exists $a_\alpha \in (a, x)$ and
+    $b_\beta \in (x, b)$.
+    Since there is a path from $\alpha$ to $\beta$, we get that
+    $x \in (a, b)$.
+
+    We need to show that elements of $\mcI$ are disjoint open intervals.
+    Suppose $I_1, I_2 \in \mcI$ have a common point $x$.
+    Let $x \in (a_\alpha, b_\alpha) \subseteq I_1$ and
+    also $x \in (a_\beta, b_\beta) \subseteq I_2$.
+    Then $(a_\alpha, b_\alpha) \sim (a_\beta, b_\beta)$, so $I_1 = I_2$.
+\end{proof}
+A simpler description of this equivalence relation is
+$(a_1, b_1) \sim (a_2, b_2)$ iff the line joining these intervals is
+contained in $V$.
+
+\begin{definition*}[Cantor set] \label{def:cantor-set}
+    The \emph{Cantor set} is defined to be the set \[
+        C = \set*{\sum_{i=1}^\infty \frac{2a_i}{3^i} : a \in {0, 1}^\N}
+    \]
+\end{definition*}
+It is easy to see that this is a subset of $[0, 1]$.
+It is also easy to show that $(\frac13, \frac23) \notin X$.
+\begin{itemize}
+    \item If $a_1 = 0$, then the rest of the summation is at most $\frac13$.
+    \item If $a_1 = 1$, then the first term is already $\frac23$.
+\end{itemize}
+For $\alpha_1, \dots, \alpha_k \in \set{0, 1}$, define \[
+    C_{\alpha_1, \dots, \alpha_k} \coloneq
+        \ab[\sum_{i=1}^k \frac{2\alpha_i}{3^i},
+            \sum_{i=1}^k \frac{2\alpha_i}{3^i} + \frac1{3^k}]
+\]
+In particular, \begin{align*}
+    C_0 &= \set*{\sum_{i=1}^\infty \frac{2a_i}{3^i} : a \in \set{0, .5, 1}^\N, a_1 = 0}, \\
+    C_1 &= \set*{\sum_{i=1}^\infty \frac{2a_i}{3^i} : a \in \set{0, .5, 1}^\N, a_1 = 1}, \\
+    C_{0,0} &= \set*{\sum_{i=1}^\infty \frac{2a_i}{3^i} : a \in \set{0, .5, 1}^\N, a_1 = 0, a_2 = 0}, \\
+    C_{0,1} &= \set*{\sum_{i=1}^\infty \frac{2a_i}{3^i} : a \in \set{0, .5, 1}^\N, a_1 = 0, a_2 = 1},
+\end{align*} and so on.
+Note that if $x \in C$, then \begin{equation} \label{eq:cantor-expansion}
+    x = \sum_{i=1}^\infty \frac{2a_i}{3^i}
+\end{equation}
+for some $(a_i)_i \in \set{0, 1}^\N$.
+Then for each $k$, $x \in C_{a_1, \dots, a_k}$.

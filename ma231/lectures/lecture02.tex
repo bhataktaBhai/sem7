@@ -1,0 +1,127 @@
+\lecture{2025-08-07}{}
+We will prove these examples one-by-one.
+We'll start skipping such proofs later in the course.
+
+\begin{proposition}[Discrete topology]
+    For any set $X$, $2^X$ is a topology on $X$.
+\end{proposition}
+\begin{proof}
+    $\O$ and $X$ are in $2^X$ by definition.
+
+    If $V_1, \dots, V_n \subseteq X$, then their intersection is also
+    a subset of $X$.
+
+    If $V_\alpha$ are subsets of $X$, so is their union.
+\end{proof}
+
+\begin{proposition}[Indiscrete topology]
+    For any set $X$, $\set{\O, X}$ is a topology on $X$.
+\end{proposition}
+\begin{proof}
+    $\O, X \in \set{\O, X}$ by definition.
+
+    If $\set{V_\alpha}_{\alpha \in I} \subseteq \set{\O, X}$,
+    then the union is similarly either $\O$ (if all $V_\alpha$ are $\O$)
+    or $X$ (if any $V_\alpha$ is $X$).
+
+    If $V_1, \dots, V_n$ are in $\set{\O, X}$, then we have two cases.
+    \begin{itemize}
+        \item If all $V_i$ are $X$, then the intersection is $X$.
+        \item Otherwise, one of them is $\O$, so the intersection is $\O$.
+    \end{itemize}
+    In either case, we have $V_1 \cap \dots \cap V_n \in \set{\O, X}$.
+\end{proof}
+
+\begin{proposition}[Standard topology on $\R$] \label{thm:topo-on-R}
+    Let $\T$ be the collection of all subsets $V$ or $\R$ such that
+    for each $x \in V$, there exists $a, b \in \R$ such that
+    $a < x < b$ and $(a, b) \subseteq V$.
+\end{proposition}
+\begin{proof}
+    $\O \in \T$ vacuously.
+    $\R \in \T$ because for each $x$, we may choose $a = x - 1$ and
+    $b = x + 1$.
+
+    Suppose $\set{V_\alpha}_{\alpha \in I} \subseteq \T$ and
+    $x \in \bigcup_{\alpha \in I} V_\alpha$.
+    Then $x \in V$ for some $V \in \set{V_\alpha}_\alpha$.
+    This gives a corresponding $a < x < b$ such that $(a, b) \in V$,
+    so $(a, b) \in \bigcup_\alpha V_\alpha$.
+
+    For $V_1, \dots, V_n \in \T$, let $x \in V_1 \cap \dots \cap V_n$.
+    There for each $i \in [n]$, we have $a_i < x < b_i$ such that
+    $(a_i, b_i) \subseteq V_i$.
+    Let $a = \max_i a_i$ and $b = \min_i b_i$.
+    Then $a < x < b$ and
+    \begin{claim}
+        For $1 \le i \le n$, $(a, b) \in V_i$.
+    \end{claim}
+    \begin{subproof}
+        Since $a_i \le a$ and $b \le b_i$, we have
+        $(a, b) \subseteq (a_i, b_i) \subseteq V_i$.
+    \end{subproof}
+    Thus $(a, b)$ is in the intersection.
+\end{proof}
+
+\begin{question}
+    What is the cardinality of the set of all topologies on $\R$?
+\end{question}
+The conjecture is that it should be the same as $2^{2^\R}$.
+\href{https://math.stackexchange.com/q/65731}{This} MSE post says that is
+true.
+
+We continue with more examples.
+\begin{examples}
+    \item{} [Cofinite topology]
+        For any set $X$, \[
+            \T = \set{V \subseteq X : X \setminus V \text{ is finite}}
+                \cup \set{\O}
+        \] is a topology on $X$.
+        In contrast, the ``finite topology'', consisting of all finite
+        subsets of $X$ together with $X$ itself is \emph{not} a topology if
+        $X$ is infinite.
+        If $X$ is finite, it simply reduces to the discrete topology.
+
+        The proof is mundane.
+    \item Let $\wbar{\N} = \N \cup \set{\infty}$ (or $\omega + 1$) and \[
+        \T = 2^\N \cup
+            \set{A \cup \set{\infty} : A \subseteq \N \text{ is cofinite}}.
+    \] This is a topology, and the set of convergent \todo{what?}
+    This is non-trivial.
+\end{examples}
+
+\begin{proposition}
+    $\T$ is a topology on $\wbar{\N}$.
+\end{proposition}
+\begin{proof}
+    $\O$ is finite.
+    $\wbar{\N} = \N \cup \set \infty$, and $\N$ is cofinite.
+
+    Let $\set{V_\alpha}_\alpha \subseteq \T$.
+    \begin{itemize}
+        \item If all of them are subsets of $\N$, so is the union.
+        \item Otherwise, the collection contains a set $A \cup \set \infty$
+            for some cofinite set $A$.
+            The union's complement is a subset of $A$'s complement,
+            hence cofinite.
+    \end{itemize}
+
+    Let $V_1, \dots, V_n \in \T$.
+    \begin{itemize}
+        \item If any of them is a subset of $\N$, so is the intersection.
+        \item Otherwise, $V_i = A_i \cup \set{\infty}$ for all $i$
+            where $A_i$ is cofinite.
+            The intersection is $(\bigcap_i A_i) \cup \set{\infty}$,
+            and the intersection of the $A_i$'s is cofinite. \qedhere
+    \end{itemize}
+\end{proof}
+
+\begin{theorem}[Cotopology] \label{thm:cotopo}
+    A collection of subsets $S$ of $X$ form the closed sets of a topological
+    space on $X$ if the following hold:
+    \begin{enumerate}
+        \item $\O, X \in S$,
+        \item $S$ is closed under finite unions, and
+        \item $S$ is closed under arbitrary intersections.
+    \end{enumerate}
+\end{theorem}

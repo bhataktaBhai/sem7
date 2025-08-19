@@ -1,0 +1,180 @@
+\section{Reductions} \label{sec:reductions}
+\lecture{2025-08-13}{}
+
+\begin{definition}[Karp reduction] \label{def:karp-reduction}
+    We say that a language $L_1 \subseteq 2^*$ is \emph{polynomial-time
+    reducible} or \emph{Karp reducible} to a language $L_2 \subseteq 2^*$
+    if there is a polynomial-time computable function $f$ such that
+    $x \in L_1 \iff f(x) \in L_2$.
+    We denote this by $L_1 \lep L_2$.
+\end{definition}
+Note that $\lep$ is reflexive and transitive.
+
+\begin{exercise}
+    Let $L_1 \subseteq 2^*$ be any language and $L_2 \in \NP$.
+    If $L_1 \lep L_2$, then $L_1 \in \NP$.
+\end{exercise}
+\begin{proof}
+    Let $M_2$ be a verifier for $L_2$.
+    We can construct a verifier $M_1$ for $L_1$ as follows.
+    $M_1$ takes $x$ and a witness $u$, and calls $M_2$ with $f(x)$ and
+    witness $u$.
+
+    Our hypotheses are that for some polynomials $p$ and $q$,
+    \begin{itemize}
+        \item $x_2 \in L_2 \iff \exists u \in 2^{q\abs{x_2}}$ such that
+            $M_2(x_2, u) = 1$; and
+        \item $x \in L_1 \iff f(x) \in L_2$ where $f(x)$ is computable in
+            time $p\abs{x}$.
+    \end{itemize}
+    The runtime of $M_1$ is clearly polynomial, and \[
+        M_1(x, u) = 1 \iff M_2(f(x), u) = 1
+            \iff f(x) \in L_2 \iff x \in L_1.
+    \] It remains to check that the witness $u$ corresponding to
+    $x_2 = f(x)$ has size polynomial in $\abs{x}$.
+    This is because $f(x)$ has size at most $p\abs{x}$, so $u$ has size
+    at most $(q \circ p)\abs{x}$.
+\end{proof}
+The above proof without the witness components easily shows that
+$\lep$ obeys transitivity (making it a preorder).
+
+\begin{definition}[$\NP$-hardness] \label{def:NP-hard}
+    A language $L$ is \emph{$\NP$-hard} if it is an upper bound for
+    $\NP$ under $\lep$.
+    $L$ is \emph{$\NP$-complete} if it is $\NP$-hard and lies in $\NP$.
+\end{definition}
+Observe that if an $\NP$-hard problem is in $\P$, then $\P = \NP$.
+Moreover, an $\NP$-complete problem is in $\P$ \emph{if and only if}
+$\P = \NP$.
+
+Most examples of $\NP$ that we discussed are known to be $\NP$-complete.
+These are vertex cover, $0/1$ integer programming,
+$3$-coloring planar graphs, and $2$-Diophantine solvability.
+
+Integer factorization is not believed to be $\NP$-complete.
+
+Graph isomorphism was shown in [Babai15] to be \emph{Quasi}-$\P$.
+Specifically, an algorithm with runtime $2^{O(\log^3 n)}$ was developed.
+
+\begin{theorem}
+    There exists an $\NP$-complete problem.
+\end{theorem}
+\begin{proof}
+    Define \[
+        L^\dagger \coloneq \set{(\alpha, x, 1^m, 1^t) : \exists u \in 2^m
+            \text{ such that } M_\alpha \text{ accepts } (x, u) \text{ in } t \text{ steps}}.
+    \] Why is this in $\NP$?
+    The witness $u$ in the description of $L^\dagger$ has length less than
+    the input, and can be verified by simulating $M_\alpha$ on
+    $(x, u)$ for $t$ steps, every step of which is polynomial in the
+    input length.
+
+    Why is it $\NP$-hard?
+    Let $L \in \NP$.
+    Then there exists a verifier $M$ with runtime $p$ and a polynomial $q$
+    such that \[
+        x \in L \iff \exists u \in 2^{q\abs{x}} \text{ such that }
+            M(x, u) = 1.
+    \] Let $\alpha$ be the encoding for $M$.
+    Then \[
+        x \in L \iff (\alpha, x, 1^{q\abs{x}}, 1^{p(\abs{x} + q\abs{x})})
+            \in L^\dagger.
+    \]
+\end{proof}
+This is of course a highly unnatural language, but we will see many
+extremely natural ones that are also $\NP$-complete,
+starting with $\SAT$ today.
+
+\begin{definition}[Conjunctive normal form] \label{def:cnf}
+    A Boolean formula is in \emph{Conjunctive normal form} (CNF) if it is
+    an $\land$ operation on many
+\end{definition}
+
+\begin{definition}[\SAT] \label{def:sat}
+    $\SAT$ is the language consisting of all satisfiable CNF formulae.
+\end{definition}
+
+\begin{theorem}[{[Cook71, Levin73]} theorem] \label{thm:clt}
+    $\SAT$ is $\NP$-complete.
+\end{theorem}
+\begin{proof}
+    It is clear that $\SAT$ is in $\NP$.
+    It remains to show that it is $\NP$-hard.
+    The main idea of the proof is that computation is local.
+
+    Let $L \in \NP$ have verifier $M$ with runtime and certificate size
+    $p(\abs{\text{input}})$.
+    We need a poly-time $f$ such that $x \in L \iff f(x) \in \SAT$.
+
+    For any fixed $x$, we can capture the computation of $M(x, \cdot)$ by
+    a CNF $\phi_x$ such that \[
+        \exists u \in 2^{p\abs{x}} \text{ with } M(x, u) = 1
+            \iff \phi_x \text{ is satisfiable}.
+    \]
+    \begin{claim}
+        Let $N$ be a deterministic Turing machine that runs in time $T(n)$
+        on every input $u$ of length $n$, and outputs $0$ or $1$.
+        Fix an $n$ and let $u$ denote inputs of length $n$.
+        Then,
+        \begin{enumerate}
+            \item there exists a CNF $\phi(u, \text{AUX})$
+            (where AUX is a set of auxiliary variables)
+            of size polynomial in $T(n)$ such that for every
+            $u \in 2^n$, $\phi(u, \text{AUX})$ is satisfiable as a
+            function of the auxiliary variables iff $N(u) = 1$.
+            \item $\phi$ is computable in time $\poly(T(n))$ from $N$, $T$
+            and $u$.
+        \end{enumerate}
+    \end{claim}
+    \begin{subproof}
+        The proof is in two steps.
+        \begin{enumerate}[label=(Step \arabic*)]
+            \item Let $N$ be a deterministic Turing machine that runs in time
+            $T(n)$ on every input $u$ of length $n$, and output $0$ or $1$.
+            Then, for every $n$ there exists a Boolean circuit $\psi$ of
+            size $\poly(T(n))$ such that $\psi(u) = 1$ iff $N(u) = 1$.
+            \item $\psi$ is computable in time $\poly(T(n))$ from $N$, $T$
+            and $n$.
+        \end{enumerate}
+
+        Let $b_{s,j}$, $h_{s,j}$, and $q_{s,j}$ be defined as follows.
+        \begin{align*}
+            b_{s,j} &\coloneq i\text{-th bit at time } s; \\
+            h_{s,j} &\coloneq \begin{cases}
+                1 & \text{if the head is at position } j \text{ at time } s, \\
+                0 & \text{otherwise; and}
+            \end{cases} \\
+            q_{s,j} &\coloneq \text{state of } N \text{ when the head was last at position } j.
+        \end{align*}
+        $q_{s,j}$ itself consists of constantly many bits.
+
+        For each $s \in [1, T(n)]$, $(b, h, q)_{s,j}$ only depend on
+        $(b, h, q)_{s-1,j-1}$, $(b, h, q)_{s-1,j}$ and
+        $(b, h, q)_{s-1,j+1}$.
+        This gives a bunch of conditions for each bit that must be
+        satisfied.
+        Any Boolean equality $x = y$ can also be written as
+        $(x \lor \neg y) \land (\neg x \lor y)$.
+    \end{subproof}
+\end{proof}
+
+\begin{theorem}
+    $\eSAT$, the language of all satisfiable $3$-CNFs, is $\NP$-complete.
+\end{theorem}
+\begin{proof}
+    We wish to reduce $\SAT$ to $\eSAT$.
+    Given a clause with $2k$ literals, one may introduce a single auxiliary
+    variable and write it as the conjunction of two clauses with $k + 1$
+    literals.
+    Write the clause as $(x_1 \lor \dots \lor x_{2k})$.
+    Introducing the auxiliary variable $z$, we may write this as \[
+        (x_1 \lor \dots \lor x_k \lor z) \land
+            (x_{k+1} \lor \dots \lor x_{2k} \lor \neg z).
+    \]
+
+    Repeating this process yields an $O(k \log k)$ algorithm to write any
+    $2k$-clause as a conjunction of $k$ separate $3$-clauses.
+    Performing this for every clause in the conjunction takes polynomial
+    time and only increases the length of the input polynomially.
+    Polynomially many auxiliary variables are required.
+\end{proof}

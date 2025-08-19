@@ -1,0 +1,115 @@
+\lecture{2025-08-13}{Independent sets; Ramsey numbers; Colorings}
+\begin{theorem} \label{thm:is-lb}
+    A graph of average degree $d$ has an independent set of size at
+    least $n/2d$.
+\end{theorem}
+\begin{proof}
+    Fix $p \in [0, 1]$ to be optimized over later.
+    Pick each vertex independently with probability $p$.
+    Call this set $S$.
+    For each edge in edge, (simultaneously) delete an arbitrary vertex in
+    $S$.
+    Call the resultant set $S'$.
+
+    The expected size of $S$ is $np$.
+    The expected number of edges is $\abs{E} p^2$.
+    Thus the expected value of $\abs{S} - \abs{S'}$ is at most
+    $\abs{E} p^2$. \[
+        \EA{S'} \ge np - \frac{nd}{2} p^2.
+    \] The lower bound is maximised by $p = \frac1d$, yielding
+    $\EA{S'} \ge \frac{n}{2d}$.
+\end{proof}
+
+\begin{exercise}
+    If $G$ has maximum degree $d$, come up with a simple greedy algorithm
+    to output an independent set of size $n/(d+1)$.
+\end{exercise}
+\begin{solution}
+    Start with $S = \O$.
+    Pick any vertex and add it to $S$.
+    Delete all its neighbours.
+    Continue to exhaustion.
+\end{solution}
+
+\begin{theorem}
+    $R(k, k) \ge \frac1e k 2^{k/2}$.
+\end{theorem}
+\begin{proof}
+    Color the edges of $K_n$ uniformly at random.
+    From each monochromatic clique of size $k$, delete one arbitrary vertex.
+
+    For each clique of size $k$, the probability that it is monochromatic is
+    $2^{1 - \binom{k}{2}}$.
+    The resultant set of vertices is expected to have size at least \[
+        n - \binom{n}{k} 2^{1 - \binom{k}{2}} \ge \wtld{n} \coloneq
+            n - \frac{n^k}{k!} 2^{1 - \binom{k}{2}}.
+    \] Thus we have the existence of a ``nice'' coloring of $K_{\wtld{n}}$,
+    so that $R(k, k) > \wtld{n}$.
+
+    To optimise over $n$, we differentiate and select a large $n$ so that \[
+        1 - k \frac{n^{k-1}}{k!} 2^{1 - \binom{k}{2}} > 0.
+    \] Using Stirling's approximation as in the proof of \cref{thm:ramsey1},
+    we get that
+    \[
+        n < \frac1{2^{\frac1{k-1}}} 2^{k/2} \frac {k-1}e
+    \] suffices.
+    The first term again approaches $1$ from above, so we ignore it.
+
+    Substituting this in $\wtld{n}$ gives \begin{align*}
+        \wtld{n} &= \frac ke 2^{k/2} - \ab(\frac ke)^k \frac{2^{k^2}}{k!} 2^{1 - \binom{k}{2}} \\
+            &\ge \frac ke 2^{k/2} - 2^{1 + \frac{k^2 + k}{2}} \frac1e
+    \end{align*}
+    \todo{what?}
+\end{proof}
+
+What does a graph $G$ with a large chromatic number $\chi(G)$?
+One imagines a densely connected subgraph.
+But such a subgraph would have short cycles.
+\begin{theorem}
+    For any $k$ and $l$, there exists a graph $G$ with chromatic number
+    more than $k$ and girth more than $l$.
+\end{theorem}
+To bound the chromatic number below, we can bound the size of the largest
+independent set above.
+\Cref{thm:is-lb} gives a lower bound and is not useful here.
+% \begin{proof}
+%     Let $G = G(n, p)$ be an Erd\"os-R\'enyi random graph with $n$ and $p$ to
+%     be chosen later.
+%     For any $i$, the expected number of independent sets of size $i$ is
+%     given by $\binom{n}{i} (1 - p)^{\binom{i}{2}}$.
+%     For sufficiently small $p$, we can make it so that this quantity is less
+%     than $1$ when $i = n/k$, meaning that for some particular instance of
+%     $G$, the chromatic number is more than $k$.
+%
+%     The girth is trickier to handle.
+%     The expected number of cycles of length $j$ is
+%     $\binom{n}{j} \frac{(j-1)!}{2} p^j$.
+%     Thus the expected number of cycles of length at most $l$ is
+%     \begin{align}
+%         \sum_{j=3}^l \binom{n}{j} \frac{(j-1)!}{2} p^j
+%             &\le \sum_{j=3}^l \frac{n^j}{j!} \frac{(j-1)!}{2} p^j \\
+%             &\le \frac l6 \frac1{1-np}.
+%     \end{align}
+%     If we remove an arbitrary vertex from each cycle of length at most $l$,
+%     we get a graph of girth more than $l$.
+%     However, this may decrease the chromatic number of the graph.
+%
+%     The key observation is that it will not decrease the size of the largest
+%     independent set.
+%     (This is why we are adamant on deleting vertices as opposed to edges.)
+%     Once this deletion process is complete, we will end up with \[
+%         n' \coloneq n - \frac l6 \frac1{1-np}
+%     \] vertices and we require that for $i = n'/k$, \[
+%         \binom{n'}{i} (1 - p)^{\binom{i}{2}} < 1.
+%     \]
+%     For $\E[n']$ to be at least, say, $n/2$, we require \[
+%         p \le \frac1n - \frac1{3nl}
+%     \]
+%     We bound \begin{align*}
+%         \binom{n'}{i} (1 - p)^{\binom{i}{2}}
+%             &\le (n')^i (1 - p)^{\binom{i}{2}} \\
+%             &\le \ab(n' (1 - p)^{(i - 1) / 2})^i \\
+%             &\le \ab(n'
+%     \end{align*}
+%     \todo[inline]{Optimize}
+% \end{proof}

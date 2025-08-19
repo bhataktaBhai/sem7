@@ -1,13 +1,66 @@
 \chapter*{The course}
 \lecture{2025-08-05}{}
 
-\textbf{Textbook:}
+\textbf{\href{https://math.iisc.ac.in/~gadgil/topology-2025/index.html}{Course website}}
+
+\subsubsection{Course Details}
+\begin{itemize}
+    \item \textbf{Instructor:} \href{https://math.iisc.ac.in/~gadgil}{Siddhartha
+      Gadgil}
+    \item \textbf{E-mail:} \href{mailto:siddhartha.gadgil@gmail.com}{siddhartha.gadgil@gmail.com}
+    \item \textbf{Office:} N-15, Department of Mathematics, IISc.
+    \item \textbf{Timing:} Tue, Thu 8:30 -- 10:00 am.
+    \item \textbf{Venue:} LH-1.
+    \item \textbf{Teaching Assistants:} Sudip Dolai, Pallab Kumar Hembram
+    \item \textbf{Office:} L-22, Department of Mathematics, IISc.
+    \item \textbf{Tutorial timing:} TBA
+    \item \textbf{Microsoft Teams Code:} \texttt{tbjeh8w}
+\end{itemize}
+
+\paragraph{Examinations and Grades.}\label{examinations-and-grades}
+Grades will be based on the assignments, midterm examination and final
+examinations with the following weightages.
+\begin{itemize}
+    \item[(10\%)] Assignments, posted roughly once a week.
+    \item[(40\%)] Midterm
+    \item[(50\%)] Final exam
+\end{itemize}
+
+\paragraph{Suggested books:}
 \begin{enumerate}
-    \item Viro, O.Ya., Ivanov, O.A., Netsvetaev, N., and Kharlamov, V.M., Elementary Topology: Problem Textbook, AMS, 2008.
-    \item Armstrong, M.~A., Basic Topology, Springer (India), 2004.
-    \item Munkres, J.~R., Topology, Pearson Education, 2005.
+    \item Armstrong,~M.~A., Basic Topology, Springer (India), 2004.
+    \item Munkres,~J.~R., Topology, Pearson Education, 2005.
+    \item Viro,~O.~Ya., Ivanov,~O.~A., Netsvetaev,~N., and Kharlamov,~V.~M.,
+      Elementary Topology: Problem Textbook, AMS, 2008.
 \end{enumerate}
-\textbf{Teams Code:}
+
+We will mostly follow the book \textbf{Elementary Topology: Problem
+Textbook} by \textbf{Viro et al.}, which is available online.
+
+\paragraph{Additional Resources.}
+This course was
+\href{https://math.iisc.ac.in/~gadgil/topology-2021/index.html}{taught online}
+in 2021.
+The \href{https://math.iisc.ac.in/~gadgil/topology-2021/all-lectures/}{lectures}
+are online as are the
+\href{https://math.iisc.ac.in/~gadgil/topology-2021/Whiteboard.pdf}{whiteboards}.
+If you want to printout the whiteboards, please use the
+\href{https://math.iisc.ac.in/~gadgil/topology-2025/notes.pdf}{compact version}.
+
+Note that students are responsible for all the material covered in the
+lectures this semester, which is likely to be more than that in the
+above resources.
+Experience also suggests that offline lectures are more
+effective.
+Thus, it is wise to use the above as supplements, not
+substitutes, for the lectures.
+
+\paragraph{Syllabus.}
+Open and closed sets, Continuous functions, Metric topology, Product
+topology, Connectedness and path-connectedness, Compactness,
+Countability axioms, Separation axioms, Complete metric spaces, Quotient
+topology, Topological groups, Orbit spaces, Urysohn's lemma,
+Metrizability, Baire Category theorem.
 
 \begin{center}
     Study of properties associated with continuity and limits.
@@ -24,12 +77,13 @@ They must coincide with our usual understanding in familiar settings such as
 $\R^n$, convergence of sequences, and so on.
 We should be able to construct new topological spaces from old ones.
 
+\chapter{Topological spaces} \label{chp:topo}
 Our first attempt is \emph{metric spaces}.
 \begin{definition}[Metric space] \label{def:metric-space}
     A \emph{metric} on a set $X$ is a function
     $d\colon X \times X \to [0, \infty)$
     such that
-    \begin{enumerate}
+    \begin{enumerate}[label=(M\arabic*)]
         \item $d(x, x) = 0$ for all $x \in X$,
         \item{} [Symmetry] $d(x_1, x_2) = d(x_2, x_1)$ for all
             $x_1, x_2 \in X$, and
@@ -78,11 +132,11 @@ The standard approach is to abstract properties of \emph{open sets}.
 In the metric space $(X, d)$, a set $U \subseteq X$ is open if for every
 $x \in U$ there exists an $\eps > 0$ such that the $\eps$-neighborhood
 of $x$ is contained in $U$.
-\begin{definition}[Topological space] \label{def:topo}
+\begin{definition*}[Topological space] \label{def:topo}
     Let $X$ be a set.
     A \emph{topology} on $X$ is a collection $\T$ of subsets of $X$ such
     that
-    \begin{enumerate}
+    \begin{enumerate}[label=(T\arabic*)]
         \item $\O, X \in \T$;
         \item if $\set{U_\alpha}_{\alpha \in I}$ is a subcollection of
             $\T$, then $\bigcup_{\alpha \in I} U_\alpha \in \T$;
@@ -90,7 +144,8 @@ of $x$ is contained in $U$.
     \end{enumerate}
     Sets in $\T$ are called \emph{open sets} and the pair $(X, \T)$ is
     called a \emph{topological space}.
-\end{definition}
+    Complements of open sets are called \emph{closed sets}.
+\end{definition*}
 \begin{examples}
     \item{} [Discrete topology] For any set $X$, $2^X$ is a topology on $X$.
     \item{} [Indiscrete topology] For any set $X$,

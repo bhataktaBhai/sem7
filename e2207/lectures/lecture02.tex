@@ -1,0 +1,156 @@
+\chapter{Basic bounds} \label{chp:1}
+\lecture{2025-08-07}{}
+\begin{theorem}[Markov's inequality] \label{thm:markov}
+    If $Y$ is a non-negative random variable, then for each $t > 0$, \[
+        \P \set{Y \ge t} \le \frac{\E Y}{t}.
+    \]
+\end{theorem}
+\begin{proof}
+
+\end{proof}
+Assume $Y$ takes values in $\mcI$ and $\phi\colon \mcI \to [0, \infty)$ is a
+(weakly) increasing function.
+Then by Markov's inequality, \[
+    \P\set{Y \ge t} \le \P\set{\phi(Y) \ge \phi(t)}
+        \le \frac{\E[\phi(Y)]}{\phi(t)}.
+\]
+
+Using $\phi = t \mapsto t^2$ and $Y = \abs{Z - \E Z}$, we get Chebyshev's
+inequality.
+\begin{theorem}[Chebyshev's inequality] \label{thm:chebyshev}
+    For any random variable $Z$, \[
+        \P\set{\abs{Z - \E Z} \ge t} \le \frac{\Var(Z)}{t^2}.
+    \]
+\end{theorem}
+Similarly \[
+    \P\set{\abs{Z - \E Z} \ge t} \le \frac{\E[\abs{Z - \E Z}^q}{t^q}
+\] for each $q > 0$.
+
+Now suppose $X_1, \dots, X_n$ are independent and let $Z$ denote their sum.
+Then $\Var(Z) = \sum_i \Var(X_i)$.
+By Chebyshev's inequality, \[
+    \P\set{\frac1n \abs{\sum_i X_i - \E X_i} \ge t} \le \frac{\sigma^2}{nt^2}
+\] where $\sigma^2 = \frac1n \sum_i Var(X_i)$.
+Note that this is \textbf{not} the variance of $Z$ or of $Z/n$.
+
+Choosing $\phi = t \mapsto e^{\lambda t}$ for some $\lambda \ge 0$,\footnote{we assume $0^0 = 1$}
+we get
+\begin{equation}
+    \P\set{Z \ge t} \le \frac{\E e^{\lambda Z}}{e^{\lambda t}}.
+\end{equation}
+This is a Chernoff bound.
+The function $\lambda \mapsto \E[e^{\lambda Z}]$ is called the
+\emph{moment generating function} (MGF) of $Z$.
+
+We define \[
+    \psi_Z(\lambda) \coloneq \log \E[e^{\lambda Z}],
+\] the log MGF, to express the above bound in a different manner.
+\begin{equation}
+    \P\set{Z \ge t} \le e^{-(\lambda t - \psi_Z(\lambda))}
+\end{equation} for every $\lambda > 0$.
+If $\psi_Z(\lambda) = \infty$, this bound is trivial.
+
+We wish the minimize the right hand side.
+Defining \begin{equation} \label{eq:cramer}
+    \psi_Z^*(t) \coloneq \sup_{\lambda \ge 0} \lambda t - \psi_Z(\lambda),
+\end{equation} we get that the best bound obtainable using this method is
+\begin{equation} \label{eq:chernoff}
+    \P\set{Z \ge t} \le e^{-\psi_Z^*(t)}.
+\end{equation}
+$\psi_Z^*$ is called the Cram\'er transform of $Z$.
+
+Now, since $\psi_Z(0) = 0$, $\psi_Z^*(t) \ge 0$.
+Further, if $\EA Z$ exists, then Jensen's inequality yields that \[
+    \psi_Z(\lambda) \ge \E [\log e^{\lambda Z}] = \lambda \E Z
+\] Thus, assuming the first moment exists, \[
+    \lambda t - \psi_Z(\lambda) \le \lambda (t - \E Z).
+\] If $t \le \E Z$, there is little hope of gettine any decent upper bound
+for $\P\set{Z \ge t}$, and certainly not in the general case.
+Thus we restrict our attention to $t \ge \E Z$.
+In that case, $\lambda t - \psi_Z(\lambda) \le 0$ whenever $\lambda \le 0$.
+Thus the supremum in \cref{eq:cramer} may be relaxed to \[
+    \psi_Z^*(t) = \sup_{\lambda \in \R} \lambda t - \psi_Z(\lambda).
+\]
+
+Since the bound is useless when $\E[e^{\lambda Z}] = \infty$, let us assume
+that there exists a positive $\lambda$ where $\psi_Z(\lambda) < \infty$.
+Note that the set of such $\lambda$ is downward-closed, as $\psi_Z$ is
+increasing.
+
+\begin{proposition}[Convexity of $\psi_Z$] \label{thm:log-mgf-convex}
+    Let $Z$ be such that $\psi_Z$ is finite over $[0, b)$.
+    Then $\psi_Z$ is convex over this set, and strictly so unless $Z$
+    is constant almost surely.
+\end{proposition}
+\begin{proof}
+    Let $\theta \in (0, 1)$ and $\lambda_1, \lambda_2 > 0$
+    Then \begin{align*}
+        \psi_Z(\theta \lambda_1 + (1 - \theta) \lambda_2)
+            &= \log \E[e^{\theta \lambda_1 Z} e^{(1 - \theta) \lambda_2 Z}] \\
+            &\le \log \ab(\E[e^{\lambda_1 Z}]^\theta \E[e^{\lambda_2 Z}]^{1 - \theta}) \\
+            &= \theta \psi_Z(\lambda_1) + (1 - \theta) \psi_Z(\lambda_2).
+    \end{align*}
+    by H\"older's inequality.
+    Further, the inequality only holds if $e^{\lambda_1 Z}$ and
+    $e^{\lambda_2 Z}$ are aligned almost surely.
+    However, if $e^{\lambda_1 Z} = c e^{\lambda_2 Z}$ a.s., then
+    $Z = c (\lambda_1 - \lambda_2)^{-1}$ almost surely.
+\end{proof}
+
+\begin{proposition}
+    $\psi_Z$ is smooth on $[0, b)$.
+\end{proposition}
+\begin{proof}
+    It is a composition of smooth maps.
+    Kind of. \todo{Do it.}
+\end{proof}
+
+\begin{proposition}
+    If $\E Z = 0$, then $\psi_Z \in C^1[0, b)$.
+\end{proposition}
+
+\begin{fact}
+    $\psi_Z^*$ is bijective-ish.
+\end{fact}
+\begin{corollary}
+    From the Chernoff bound, \[
+        \P\set*{Z \ge (\psi_Z^*)^{-1}(\log \frac1{\delta})} \le \delta.
+    \]
+\end{corollary}
+
+\begin{examples}
+    \item{} [Gaussian] Let $Z \sim N(0, \sigma^2)$.
+        Then \begin{align*}
+            \E e^{\lambda Z}
+                &= \int \frac1{\sigma \sqrt{2\pi}} e^{\lambda z} e^{-\frac{z^2}{2 \sigma^2}} dz \\
+                &= \int \frac1{\sigma \sqrt{2\pi}}
+                    e^{-\frac{z^2 - 2 z \lambda \sigma^2 + (\lambda \sigma^2)^2}{2 \sigma^2}}
+                    e^{\frac{\lambda^2}{2 \sigma^2}} dz \\
+                &= e^{\frac{\lambda^2 \sigma^2}{2}}
+                    \int \frac1{\sigma \sqrt{2\pi}}
+                    e^{-\frac{(z - \lambda \sigma^2)^2}{2 \sigma^2}} dz \\
+                &=  e^{\frac{\lambda^2 \sigma^2}{2}}.
+        \end{align*}
+        That is, $\psi_Z(\lambda) = \frac12 \lambda^2 \sigma^2$.
+        The maximum of $\lambda t - \frac12 \lambda^2 \sigma^2$ is
+        achieved at $\lambda^* = t / \sigma^2$,
+        giving $\psi^*_Z(t) = \frac{t^2}{2 \sigma^2}$.
+        By \cref{eq:chernoff}, \[
+            \P\set{Z \ge t} \le e^{-\frac{t^2}{2 \sigma^2}}
+        \] for all $t \ge 0$.
+    \item{} [Poisson] Let $Y \sim \Poi(\nu)$.
+        Then \begin{align*}
+            \E e^{\lambda Y}
+                &= e^{-\nu} \sum_{k=0}^\infty e^{\lambda k} \frac{\nu^k}{k!} \\
+                &= e^{-\nu} e^{e^\lambda \nu}.
+        \end{align*}
+        Thus $\psi_Y(\lambda) = \nu (e^\lambda - 1)$.
+        Differentiating $\lambda t - \nu (e^\lambda - 1)$ with respect to
+        $\lambda$, we get $\lambda^* = \log(t / \nu)$ to be the optimum
+        $\lambda$ for $\psi^*_Y$.
+        Thus \[
+            \psi^*_Y(t) = t \log\ab(\frac t\nu) - \nu \ab(\frac t\nu - 1)
+                = \nu \ab(\frac t\nu \log\ab(\frac t\nu) - \frac t\nu + 1)
+                = \nu h\ab(\frac t\nu - 1)
+        \]
+\end{examples}

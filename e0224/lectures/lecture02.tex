@@ -1,0 +1,118 @@
+\lecture{2025-08-11}{$\P$, $\NP$ and $\NP$-completness}
+For a while, we will focus primarily on decision problems.
+A decision problem may be phrased as a Boolean function
+$f\colon \set{0, 1}^* \to \set{0, 1}$ or as a language over $\set{0, 1}^*$,
+where $f \leftrightarrow \set{s \in \set{0, 1}^* : f(s) = 1}$.
+\begin{definition}[Decision] \label{def:decision}
+    We say that a Turing machine $M$ \emph{decides} a language
+    $L \subseteq 2^*$ if $M$ computes the indicator function $\1L$ of $L$.
+\end{definition}
+
+Unless otherwise stated, $n$ will always denote the size of the input.
+\begin{definition}[$\P$] \label{def:P}
+    Let $T\colon \N \to \N$.
+    A language $L$ is in $\mathsf{DTIME}(T(n))$ if there is a Turing machine
+    that decides $L$ in time $O(T(n))$.
+
+    The complexity class $\P$ is defined to be \[
+        \P \coloneq \bigcup_{c \in \N} \mathsf{DTIME}(n^c).
+    \]
+\end{definition}
+\begin{examples}
+    \item Cycle detection: detect if a given graph has a cycle.
+    \item Solvability of a system of linear equations: Gaussian elimination.
+    \item Perfect mathing [Edmonds65]: Check if a given graph has a perfect
+        matching.
+        This paper laid foundation for the class $\P$, which Edmonds called
+        ``algebraically increasing'' with input size.
+    \item Planarity testing [HopcroftTarjan74]: Check if a given graph is
+        planar.
+    \item Primality testing [AKS02]
+\end{examples}
+
+\begin{definition}[Polynomial-time] \label{def:polynomial-time}
+    A Turing machine $M$ is a polynomial-time Turing machine if there is a
+    polynomial function $q\colon \N \to \N$ such that for every input $x$,
+    $M$ halts on $x$ within $q(\abs{x})$ time.
+\end{definition}
+
+\begin{definition}[$\FP$] \label{def:FP}
+    We say that a problem or a function $f\colon 2^* \to 2^*$ is
+    in $\FP$ if there is a polynomial-time Turing machine that computes $f$.
+\end{definition}
+\begin{examples}
+    \item Greatest common divisor: Euclid's algorithm
+    \item Counting path in a DAG: Find the number of paths between two
+        vertices in a directed acyclic graph.
+        Perform a breadth-first search.
+    \item Maximum matching [Edmonds65]:
+        Find a maximal matching in a given graph.
+        That is, a maximal set of edges such that no two edges are incident
+        on the same vertex.
+    \item Linear programming [Khachiyan79,Karmakar84]: Optimize a linear
+        objective function subject to linear inequality constraints.
+    \item Polynomial factoring [LenstraLenstraLovasz82]:
+        Compute the irreducible factors of a univariate polynomial over
+        $\Q$.
+\end{examples}
+It is now known if linear programming has a \emph{strongly} polynomial-time
+algorithm.
+\todo[inline]{Read about the differences between weakly, strongly and
+pseudo polynomial-time.}
+
+\section{$\NP$} \label{sec:NP}
+Solving a problem is generally harder than verifying whether a conjectured
+solution is indeed one.
+\begin{definition}[$\NP$] \label{def:NP}
+    A language $L \subseteq 2^*$ is in $\NP$ if there is a polynomial
+    function $p\colon \N \to \N$ and a polynomial-time Turing machine $M$
+    (called the \emph{verifier}) such that for every input $x$, \[
+        x \in L \iff \text{there exists a } u \in 2^{p(\abs{x})}
+            \text{ such that } M(x \vert u) = 1.
+    \] Such a $u$ if called a \emph{certificate} or \emph{witness} with for
+    $x \in L$ with respect to $L$ and $M$.
+\end{definition}
+\begin{examples}
+    \item Vertex cover: Given a graph $G$ and an integer $k$, check if $G$
+        has vertex cover of size $k$.
+    \item $0/1$ integer programming: Given a ststem of linear inequalities,
+        check if there exists a $0$-$1$ assignment to the variables that
+        satisy all the inequalities.
+    \item Integer factorization: Given two numbers $n$ and $U$, check if
+        $n$ has a prime factor less than or equal to $U$.
+        The certificate is a (prime) number $p \le U$ that divides $n$.
+        The verifier only needs to check that $p$ is prime, the inequality
+        holds, and that it divides $n$.
+        \todo[inline]{Is it necessary to check that $p$ is prime?}
+    \item Graph isomorphism: Given two graphs, check if they are isomorphic.
+    \item $2$-Diophantine solvability:
+        Given three integers $a$, $b$ and $c$, check if there is an
+        integer solution to $ax^2 + by + c = 0$.
+
+        Hint: descent.
+        \begin{proof}
+            The natural certificate is a satisfying pair $(x, y)$.
+            It is allowed to be of size $\poly(\log \abs{a}, \log \abs{b},
+            \log \abs{c})$.
+            The case when $c = 0$ is trivial, as is when $a = 0$.
+            If $b = 0$, the only possible solution has size
+            $\Theta(\log \abs{c/a})$, which is also acceptable.
+
+            The certificate size is $\log \abs{x} + \log \abs{y}$, give or
+            take 4 bits.
+            Thus $\abs{xy}$ is allowed to be of size
+            $2^{\poly(\log \abs{ab})}$.
+
+            Given a solution $(x, y)$, $(x + b, y - a(2x + b))$ is also a
+            solution.
+            Thus there exists a solution $(x, y)$ with $0 \le x < b$.
+            In this case $x$ takes up $\log \abs{b}$ bits,
+            and $\abs{y}$ is at most $\abs{c} + \abs{ab^2}$.
+            Thus $\log \abs{y} \in \poly(\log \abs{abc})$.
+        \end{proof}
+\end{examples}
+
+$\P \subseteq \NP$ since the machine $M$ deciding the problem itself gives
+verifier, which simply discards the witness and runs $M$ on the input.
+
+\todo[inline]{Read the survey ``The history and status of the $\P$ versus $\NP$ problem''.}

@@ -28,7 +28,7 @@ One easy way to generalize positivity (non-negativity) of real numbers to
 matrices is to consider diagonal matrices with non-negative entries.
 
 More generally, we 
-\begin{theorem}[Spectral Theorem] \label{thm:spectral}
+\begin{theorem}[Spectral theorem] \label{thm:spectral}
     Each symmetric matrix $A \in \R^{n \times n}$ has an orthonormal
     eigenbasis, that is, there exist orthonormal vectors $u_1, \dots, u_n$
     with eigenvalues $\lambda_1, \dots, \lambda_n$ such that
@@ -64,12 +64,18 @@ That is, a matrix $A$ is positive semidefinite iff it can be expressed as
 $U \Lambda U^T$ where $U \in O(n)$ and $\Lambda$ is a diagonal matrix with
 $\lambda_{i i} \ge 0$.
 The formal definition is different.
-\begin{definition}[Positive Semidefinite] \label{def:psd}
+\begin{definition}[Positive semidefinite] \label{def:psd}
     Let $A \in \R^{n \times n}$ and let
     $\kappa_A\colon \R^n \times \R^n \to \R$ be the associated bilinear form
     $\kappa_A(v, w) = v^T A w$.
+
     $A$ is \emph{positive semidefinite} iff $A = A^T$ and
     $\kappa_A(v, v) \ge 0$ for all $v \in \R^n$.
+    We denote the set of all PSD matrices of dimension $n$ by $\PSD_n$.
+
+    $A$ is \emph{positive definite} iff $A = A^T$ and
+    $\kappa_A(v, v) > 0$ for all $v \in \R^n \setminus \set 0$.
+    We denote the set of all PD matrices of dimension $n$ by $\PD_n$.
 \end{definition}
 
 \begin{remark}
@@ -84,23 +90,17 @@ The formal definition is different.
     \cref{def:psd}.
 \end{remark}
 
-A \emph{principal submatrix} of $A \in \R^{n \times n}$ is the matrix
-obtained by choosing a non-empty subset $S \subseteq [n]$ and keeping
-precisely those rows and columns of $A$ indexed by $S$.
-
 We will over the course of the course prove most of the following.
-\begin{theorem}
-    The following are equivalent for $A \in \R^{n \times n}$.
+\begin{theorem} \label{thm:psd-equiv}
+    The following are equivalent for symmetric $A \in \R^{n \times n}$.
     \begin{enumerate}
-        \item $A$ is PSD.
-        \item All eigenvalues of $A$ are in $[0, \infty)$.
-        \item $A = B^T B$ for some $B \in \R^{n \times n}$.
-        \item All principal submatrices of $A$ have non-negative
-            determinants.
-        \item $A$ is a Gram matrix from $\R^n$.
-        \item $A$ is the covariance matrix of some data.
+        \item $A$ is PSD. \label{thm:psd-equiv:1}
+        \item All eigenvalues of $A$ are in $[0, \infty)$. \label{thm:psd-equiv:2}
+        \item $A = B^T B$ for some $B \in \R^{n \times n}$. \label{thm:psd-equiv:3}
+        \item $A$ is a Gram matrix from $\R^n$. \label{thm:psd-equiv:4}
+        \item $A$ is the covariance matrix of some data. \label{thm:psd-equiv:5}
         \item $A$ is the Cayley-Menger matrix of an $(n + 1)$-point
-            Euclidean metrix space $X \subseteq (\R^n, \norm{\cdot}_2)$.
+            Euclidean metrix space $X \subseteq (\R^n, \norm{\cdot}_2)$. \label{thm:psd-equiv:6}
     \end{enumerate}
 \end{theorem}
 PSDs show up in many places, such as

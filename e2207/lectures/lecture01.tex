@@ -17,14 +17,14 @@
 \end{question}
 Our expectation is $5000$.
 
-\begin{theorem*}[Weak law of large numbers] \label{thm:wlln}
+\begin{theorem}[Weak law of large numbers] \label{thm:wlln}
     If $X_1, X_2, \dots$ are iid random variables with finite mean and
     variance, then $\frac1n \sum_{i=1}^n X_n \pto \E[X_1]$.
     That is, for any $\epsilon > 0$, \[
         \lim_{n \to \infty}
             \P\set*{\abs*{\frac1n \sum_{i=1}^n X_i - \E[X_1]} > \epsilon} = 0.
     \]
-\end{theorem*}
+\end{theorem}
 The finite variance assumption is not necessary.
 
 For a fixed $\eps$, the error bound on $S_n$ is $O(n)$.
@@ -66,7 +66,7 @@ happens to be decreasing in this case.
 
 These were largely asymptoptic results.
 The two simplest concentration inequalities are non-asymptotic.
-\begin{theorem}[Markov's inequality] \label{thm:markov}
+\begin{theorem}[Markov's inequality]
     If $X$ is a non-negative random variable, then for any $t > 0$, \[
         \P(X \ge t) \le \frac{\E[X]}{t}.
     \]

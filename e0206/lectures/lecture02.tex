@@ -1,0 +1,159 @@
+\lecture{2025-08-11}{Vector sums; Ramsey numbers; intersecting families}
+\begin{theorem}
+    Given unit vectors $v_1, \dots, v_n \in \R^n$, there exist
+    $\eps_1, \dots, \eps_n \in \set{\pm 1}$ such that \[
+        \norm*{\sum_i \eps_i v_i} \le \sqrt n.
+    \]
+\end{theorem}
+\begin{proof}
+    Set the $\eps_i$s to be iid with
+    $\P\set{\eps_1 = 1} = \P\set{\eps_1 = -1} = \frac12$.
+    Let \begin{align*}
+        X \coloneq \norm*{\sum_i \eps_i v_i}^2
+            &= \sum_i \norm{v_i}^2 + \sum_{i,j} \eps_i \eps_j \innerp{v_i}{v_j} \\
+            &= n + \sum_{i,j} \eps_i \eps_j \innerp{v_i}{v_j}.
+    \end{align*}
+    Then $X$ has expectation $n$, so there exists a confirguration in which
+    it is at most $n$.
+\end{proof}
+The other inequality also holds by the same proof.
+The norm can be made at least $\sqrt n$.
+
+\begin{exercise}
+    Give a deterministic algorithm to yield $\eps_1, \dots, \eps_n$.
+\end{exercise}
+\begin{solution}
+    Choose $\eps_1, \eps_2, \dots$ one by one, at each step choosing the
+    option which yields the smaller current norm.
+    The proof that this works is the same as the derandomization for
+    half-cut shown in \cref{sec:derandomization}.
+\end{solution}
+\todo[inline]{Prof.~Anand says there is a simpler algorithm.}
+
+\begin{definition}[Ramsey numbers] \label{def:ramsey-numbers}
+    $R(k, l)$ is defined to be the smallest $n$ such that any coloring of
+    the edges of $K_n$ using the colors Red and Blue has either a Red clique
+    of $k$ vertices or a Blue clique of $l$ vertices.
+\end{definition}
+\begin{exercise}
+    Show that $R(k, l)$ is finite.
+    Ideally, show that $R(k, k) \le 4^k$.
+\end{exercise}
+% \begin{proof}
+%     It suffices to bound the diagonal Ramsey numbers, since
+%     $R(k, l) \le R(k \lor l, k \lor l)$.
+%
+%     For simplicity of notation let $n = R(k, k)$.
+%     Note that $K_{2n}$ must have at least $2$ monochromatic cliques
+%     If these have 
+%     Consider $K_{R(k, k) + t}$ where $t$ is to be determined later.
+%     Assume that this has no monochromatic clique of size $k + 1$.
+%     WLOG let the first $k$ vertices form a Red clique.
+%     Then each of the last $t$ vertices must have a Blue edge to one of
+%     the first $k$.
+%     If $t \ge k^{R(k, k)}$, then there is at least one $i \in [k]$ that has
+% \end{proof}
+
+\begin{examples}
+    \item $R(1, 1) = 1$.
+    \item $R(2, 2) = 2$.
+    \item $R(3, 3) = 6$.
+    \begin{proof}
+        Let $v \in K_n$ be arbitrary.
+        At least $3$ of its outgoing edges are the same color.
+        Assume that to be Red.
+        Consider the clique formed by the three corresponding neighbors.
+        If all of the edges are Blue, we are done.
+        If any of them is Red, it forms a Red clique together with $v$.
+
+        It is easy to color $K_5$ such that it avoids $3$-cliques.
+    \end{proof}
+\end{examples}
+
+\begin{theorem} \label{thm:ramsey1}
+    For any $k$, $R(k, k) > \frac1{e\sqrt 2} k 2^{k/2}$.
+\end{theorem}
+\begin{proof}
+    Let $n \in \N$.
+    To show that $R(k, k) > n$, we must obtain a ``nice'' coloring of
+    $K_n$, that is, one that avoids monochromatic $k$-cliques.
+
+    Color the edges of $K_n$ uniformly at random.
+    Then for any $k$-clique, the probability that it is monochromatic is
+    $2 \ab(\frac12)^{\binom{k}{2}}$.
+
+    Summing this up over all possible $k$-cliques yields an upper bound of
+    $2 \binom{n}{k} \ab(\frac12)^{\binom{k}{2}}$ on the probability that
+    there exists any monochromatic $k$-clique at all.
+    If this bound is strictly less that $1$, then with some positive
+    probability, we obtain a nice coloring of $K_n$.
+    This happens when \[
+        \binom{n}{k} < 2^{\binom{k}{2} - 1}.
+    \] Now $\binom{n}{k} \le \frac{n^k}{k!} < 2^{\binom{k}{2} - 1}$ when
+    $n < \frac1{2^{1 / k}} 2^{\frac{k - 1}{2}} k!^{\frac1k}$.
+
+    Using that $k! \ge \sqrt{2 \pi k} \ab(\frac ke)^k$, we have that \[
+        n < \ab(\frac{\pi k}{2})^{\frac1{2k}} \frac1{\sqrt 2} 2^{\frac k2} \frac ke
+    \] suffices.
+    The first term approaches $1$ from above, so we will write the bound as
+    \[
+        n < \frac1{e \sqrt 2} k 2^{\frac k2}.
+    \]
+    Thus, $R(k, k) \ge (e \sqrt 2)^{-1} k 2^{k/2}$.
+\end{proof}
+
+\begin{definition}[$k$-intersecting family] \label{def:intersecting-family}
+    A family $F = \set{S_1, \dots, S_m}$ of subsets from a universe $U$ of
+    $n$ elements is a \emph{$k$-intersecting family} if
+    \begin{itemize}
+        \item $\abs{S_i} = k$ for every $i \in [m]$, and
+        \item $S_i \cap S_j \ne \O$ for every $i, j \in [m]$.
+    \end{itemize}
+\end{definition}
+
+\begin{theorem} \label{thm:intersecting-family}
+    Let $\abs{U} = n$ and $F$ be a $k$-intersecting family from $U$
+    where $n \ge 2k$.
+    Then $\abs{F} \le \binom{n-1}{k-1}$.
+\end{theorem}
+This bound is tight.
+One such $F$ would be $\set{A \cup \set u : A \in \binom{U \setminus \set u}{k-1}}$,
+where $u$ is an arbitrary element of $U$.
+\begin{lemma}
+    Let $\abs{U} = n$ and $F$ be a $k$-intersecting family from $U$
+    where $n \ge 2k$.
+    Fix a permutation $\sigma$ of $[n]$.
+    Let $A_{\sigma, i} = \set{\sigma(i), \dots, \sigma(i+k-1)}$.
+    (The addition is modulo $n$.)
+    Then there are at most $k$ values of $i$ for which $A_{\sigma,i} \in F$.
+\end{lemma}
+\begin{proof}
+    The permutation is irrelevant here.
+    WLOG assume that it is the identity.
+    Each $A_i$ has size $k$.
+
+    Assume $A_i \in F$.
+    The sets which overlap with $A_i$ are $A_{i-k+1}$ through
+    $A_{i+k-1}$.
+    That is, $2k - 2$ other sets which could be a part of $F$.
+    However, $A_{i-k+1}$ and $A_{i+1}$ do not overlap.
+    Neither do $A_{i-k+2}$ and $A_{i+2}$, all
+    the way up to $A_{i-1}$ and $A_{i+k-1}$.
+    Since only one set may be present from each of these pairs,
+    only $k - 1$ of these ``other sets'' may be a part of $F$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:intersecting-family}]
+    Sample $\sigma \in S_n$ and $i \in [n]$ uniformly at random.
+    Note that $A_{\sigma, i}$ is then a uniform random subset of size $k$.
+    Call this $A$.
+
+    Thus $\P\set{A \in F} = \abs{F} \binom{n}{k}^{-1}$.
+    However, this probability is also \begin{align*}
+        \P(A \in F)
+            &= \sum_\sigma \frac1{n!} \P(A \in F \mid \sigma) \\
+            &\le \sum_\sigma \frac1{n!} \frac kn
+    \end{align*}
+    by the lemma.
+    Thus $\abs{F} \le \binom nk \frac kn = \binom{n-1}{k-1}$.
+\end{proof}

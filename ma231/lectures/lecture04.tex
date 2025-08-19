@@ -1,0 +1,131 @@
+\lecture{2025-08-14}{}
+\begin{lemma} \label{thm:cantor-descent}
+    For each $\alpha_1, \dots, \alpha_k, \alpha_{k+1} \in \set{0, 1}$,
+    \begin{enumerate}
+        \item $C_{\alpha_1, \dots, \alpha_k, \alpha_{k+1}} \in
+            C_{\alpha_1, \dots, \alpha_k}$, and
+        \item $C_{\alpha_1, \dots, \alpha_k, 0} \cap
+            C_{\alpha_1, \dots, \alpha_k, 1} = \O$.
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    Trivial.
+\end{proof}
+
+Let $C^{(k)} = \bigcup_{\alpha \in \set{0, 1}^{[k]}} C_{\alpha_1, \dots, \alpha_k}$.
+This is a finite union of closed intervals, hence closed.
+However, we also saw that $C \subseteq C^{(k)}$ for each $k$ via
+\cref{eq:cantor-expansion}.
+Thus $C \subseteq \bigcap_{k=1}^\infty C^{(k)}$.
+\begin{proposition}
+    $C = \bigcap_{k=1}^\infty C^{(k)}$.
+\end{proposition}
+\begin{proof}
+    Let $x \in \bigcap_{k=1}^\infty C^{(k)}$.
+    That is, for each $k$, there exists $\alpha \in 2^{[k]}$ such that
+    $x \in C_{\alpha_1, \dots, \alpha_k}$.
+    \begin{claim}
+        For $l \ge k$, if $x \in C_{\alpha_1, \dots, \alpha_k}$ and
+        $x \in C_{\beta_1, \dots, \beta_l}$, then
+        $\alpha_1 = \beta_1, \dots, \alpha_k = \beta_k$.
+    \end{claim}
+    \begin{subproof}
+        \Cref{thm:cantor-descent} implies that
+        $C_{\beta_1, \dots, \beta_l} \subseteq C_{\beta_1, \dots, \beta_k}$.
+        Its second part implies $\alpha_1 = \beta_1, \dots, \alpha_k = \beta_k$
+        by looking at the first point of difference, should it exist.
+    \end{subproof}
+    Thus, there exists a unique sequence $\alpha_1, \alpha_2, \dots$ such
+    that $x \in C_{\alpha_1, \dots, \alpha_k}$ for all $k$.
+    \begin{claim}
+        $x = \sum_{i=1}^\infty \frac{2\alpha_i}{3^i}$.
+    \end{claim}
+    \begin{subproof}
+        For $k \ge 1$, $\sum_{i=1}^k \frac{2\alpha_i}{3^i} \in
+        C_{\alpha_1, \dots, \alpha_k}$.
+        But so is $x$.
+        Thus \[
+            \abs*{x - \sum_{i=1}^\infty \frac{2\alpha_i}{3^i}}
+                \le \frac1{3^k}.
+        \] Since this holds for all $k$, these two nubers are the same.
+    \end{subproof}
+    Since $x$ was arbitrary, $\bigcap_{k=1}^\infty C^{(k)} \subseteq C$.
+\end{proof}
+\begin{corollary}
+    As an intersection of closed sets, $C$ is closed.
+\end{corollary}
+
+\section{Bases} \label{sec:bases}
+We say that the natural topology $\T$ on $\R$ is the collection of unions
+of open intervals.
+We say that open intervals are a \emph{base} for $\T$.
+
+\begin{definition*}[Base] \label{def:base}
+    A collection of subsets $\mcB$ of $X$ is said to be a base for a
+    topology $\T$ on $X$ if \[
+        \T = \set{\bigcup_{\alpha \in I} B_\alpha :
+                \set{B_\alpha} \subseteq \mcB}.
+    \] Elements of $\mcB$ are called \emph{basic open sets}.
+\end{definition*}
+
+\begin{question} \leavevmode
+    \begin{itemize}
+        \item Is there a more convenient characterization of the bases for
+            a topology?
+        \item When is a collection $\mcB \subseteq 2^X$ a base for
+            \emph{some} topology?
+        \item When are two collections $\mcB_1$ and $\mcB_2$ bases for the
+            same topology?
+    \end{itemize}
+\end{question}
+
+\begin{examples}
+    \item A base for the discrete topology on $X$ is $\mcB = \binom{X}{1}$.
+        This is the minimum (not just minimal) base for the
+        discrete topology.
+    \item A base for the indiscrete topology on $X$ is $\mcB = \set X$.
+        This is one of the only two bases, the other being $\set{\O, X}$.
+    \item A base for the cofinite topology on any infinite set $X$ is \[
+        \mcB = \set{X \setminus F : 2^{2^{100}} < \abs{F} < \infty}.
+    \]
+    \item A base for the topology on $\R$ is \[
+            \set{(a, b) : a, b \in \Q}.
+        \] This is because any interval with real (or infinite) endpoints can
+        be written as the union of intervals with rational endpoints tending
+        towards those.
+        This depends on \cref{thm:base}\labelcref{thm:base:basic}
+        that follows.
+\end{examples}
+
+\begin{theorem*} \label{thm:base}
+    Let $\T$ be a topology on $X$ and $\what{\mcB} \subseteq 2^X$.
+    \begin{enumerate}
+        \item $\what{\mcB}$ is a base for the topology $\mcT$ if every
+            $V \in \what{\mcB}$ is open and for every $V \in \T$ and
+            $x \in V$, there exists a $W \in \what{\mcB}$ such that
+            $x \in W \subseteq V$. \label{thm:base:open}
+        \item Let $\mcB$ be a given base for $\T$.
+            Then $\what{\mcB}$ is a base for $\T$ if every
+            $V \in \what{\mcB}$ is open and for all $V \in \mcB$ and
+            $x \in V$, there exists a $W \in \what{\mcB}$ such that
+            $x \in W \subseteq V$. \label{thm:base:basic}
+    \end{enumerate}
+\end{theorem*}
+\begin{proof}
+    % We will only prove the ``if'' part of both statements.
+    Assume that every $V \in \what{\mcB}$ is open.
+    Since each $V \in \what{\mcB}$ is open, their unions are in $\T$.
+    \begin{enumerate}
+        \item Assume that for all $x \in V \in \T$, there is a neighborhood
+            $W \in \what{\mcB}$ of $x$ that is contained within $V$.
+
+            For any $V \in \T$, simply write $V = \bigcup_{x \in V} W_x$
+            where $W_x$ is gotten from the hypothesis.
+        \item Assume the requisite hypothesis once more.
+            For any $V \in \T$, write it as
+            $\bigcup_{\alpha \in I} B_\alpha$ for a
+            $\set{B_\alpha} \subseteq \mcB$.
+            Further write each $B_\alpha$ as
+            $B_\alpha = \bigcup_{x \in B_\alpha} W_x$. \qedhere
+    \end{enumerate}
+\end{proof}

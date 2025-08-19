@@ -1,18 +1,24 @@
 \chapter*{The course}
-\lecture{2025-08-06}{}
+\lecture{2025-08-06}{Turing machines}
 
-\textbf{Instructor:} Chandan Saha
+
+\textbf{\href{https://www.csa.iisc.ac.in/~chandan/courses/complexity25/home.html}{Course website}} \\
+\textbf{Instructor:} Chandan Saha \\
+\textbf{Time:} Mondays and Wednesdays, 11:30--13:00 \\
+\textbf{Room:} CSA 252
 \\[1em]
+\textbf{Syllabus:}
+\begin{itemize}
+    \item $\P$, $\NP$ and $\NP$-completeness
+    \item Space complexity
+    \item Polynomial time hierarchy
+    \item Boolean circuits
+    \item Randomized computation
+    \item Complexity of counting
+    \item Basics of hardness of approximations
+\end{itemize}
+\vspace{1em}
 \textbf{Resources:}
-% Computational Complexity - A Modern Approach by Sanjeev Arora and Boaz Barak
-% (We'll closely follow this book)
-% Computational Complexity Theory by Steven Rudich and Avi Wigderson (Editors)
-% Mathematics and Computation by Avi Wigderson
-% Boolean Function Complexity by Stasys Jukna
-% Gems of Theoretical Computer Science by Schoening and Pruim
-% The Nature of Computation by Moore and Mertens
-% The Complexity Theory Companion by Hemaspaandra and Ogihara
-% Online lecture notes... (take a look at this webpage)
 \begin{enumerate}
     \item \href{https://www.cs.princeton.edu/theory/complexity/}{Computational Complexity: A Modern Approach}
         by Sanjeev Arora and Boaz Barak \\
@@ -49,13 +55,21 @@
 Problems come in various flavors.
 \begin{description}
     \item[Decision problem] \leavevmode
+        \begin{itemize}
+            \item Is $n$ a prime number?
+            \item Is a vertex $t$ reachable from a vertex $s$ in a given
+            graph $G$?
+        \end{itemize}
     \item[Search problem] \leavevmode
         \begin{itemize}
             \item Search for a prime between $n$ and $2n$.
+            \item Find a path from $s$ to $t$ in graph $G$.
+            \item Find a satisying assignment for a Boolean formula.
         \end{itemize}
     \item[Counting problem] \leavevmode
         \begin{itemize}
-            \item Count the number of 
+            \item Count the number of cycles in a graph.
+            \item Count the number of perfect matchings in a graph.
         \end{itemize}
     \item[Optimization problem] \leavevmode
         \begin{itemize}
@@ -105,20 +119,29 @@ Algorithms are methods for solving problems, studied via formal
 
         Access to random bits can help improve computational complexity,
         but to what extent?
-        Quicksort has expected running time $\Theta(n \log n)$, but
-        worst-case time $\Theta(n^2)$.
+        We know that Quicksort has expected running time $\Theta(n \log n)$,
+        but worst-case time $\Theta(n^2)$.
+        Can $\SAT$ be solved in polynomial time using randomness?
+        \begin{fact}[Schoening99]
+            $\eSAT$ can be solved in $O((4/3)^n)$ \emph{randomized} time.
+        \end{fact}
+        Brute force takes $O(2^n)$ time, and the state-of-the-art for
+        randomized algorithms is approximately $O(1.307^n)$ time.
     \item[Counting complexity] The class $\sP$.
         \begin{itemize}
             \item How hard is it to count the number of perfect matchings
                 in a graph?
             \item How hard is it to count the number of cycles in a graph?
+            \item Can we compute the number of simple paths between vertices
+                $s$ and $t$ in $G$ efficiently?
         \end{itemize}
+        In general, is counting comparable to or much harder than deciding?
     \item[Approximation]
         A hardness of approximation result looks like the following.
         \begin{theorem}[Hastad, 1997]
             If there exists, for some $\eps > 0$, a polynomial-time
             algorithm to compute an assignment that satisfies at least
-            $7/8 + \eps$ fraction of the clauses of an input $3\SAT$,
+            $7/8 + \eps$ fraction of the clauses of an input $\eSAT$,
             then $\P = \NP$.
         \end{theorem}
         In contrast, there is a polynomial-time algorithm to compute an
@@ -170,33 +193,50 @@ $M$ a Turing machine on the alphabet $\set{0, 1}$.
 In this course, we will almost always deal with Turing machines that halt on
 every input, and computational problems that can be solved by a Turing
 machine.
+Can all computational problems be solved by some Turing machine?
+No, since the set of all Turing machines is countable but $\N^\N$ is not.
+Neither is $2^\N$, so there exist decision problems which cannot be solved
+via Turing machines.
+A more natural example is
+\begin{fact*}[DPRM70]
+    There is no algorithm, realizable by a Turing machine, that decides
+    whether a given Diophantine equation admits an integral solution.
+\end{fact*}
+Finding such an algorithm was Hilbert's tenth problem.
 
-\begin{definition}[Time constructible function] \label{def:tcf}
+\begin{definition*}[Time constructible function] \label{def:tcf}
     A function $T\colon \N \to \N$ is \emph{time constructible} if
     $T(n) \ge n$ and there is a Turing machine that computes the function
-    that maps $x$ (expressed in binary) to $T(\abs{x})$
-    (expressed in binary) in $O(T(\abs{x}))$ time.
-\end{definition}
+    $x \mapsto T(\abs{x})$ (expressed in binary) in $O(T(\abs{x}))$ time.
+\end{definition*}
 For example, $(\cdot)^2$, $2^\cdot$ and $(\cdot) \log (\cdot)$ are all
 time constructible.
 
+\section{Robustness} \label{sec:robustness}
 \begin{theorem}[Binary alphabets suffice] \label{thm:binary}
     Let $f\colon 2^* \to 2^*$ and $T\colon \N \to \N$ be a time
     constructible function.
 
-    If a Turing machine $M$ over an alphabet $\Gamma$, then
+    Denote the length of the input by $n$.
+    If a Turing machine $M$ over an alphabet $\Gamma$ computes $f$, then
     there exists another Turing machine $M'$ that computes $f$ in time
-    $4 \log_2 \abs{\Gamma} T(n)$ using $\set{0, 1, \blank}$ as the alphabet.
+    $4 \log_2 \abs{\Gamma} T(n)$ using the alphabet $\set{0, 1, \blank}$.
 \end{theorem}
 
 \begin{theorem}[One tape suffices] \label{thm:one-tape}
     Let $f\colon 2^* \to 2^*$ and $T\colon \N \to \N$ be a time
     constructible function.
 
-    If a Turing machine $M$ with $k$ tapes computes $f$ in $T(n)$, then
-    there exists a Turing machine $M'$ with $1$ tape that computes $f$ in
-    $k T(n)^2$ time.
+    Denote the length of the input by $n$.
+    If a Turing machine $M$ with $k$ tapes computes $f$ in $T(n)$ time,
+    then there exists a Turing machine $M'$ with $1$ tape that computes $f$
+    in $5 k T(n)^2$ time.
 \end{theorem}
+One potential way to do this would be to compute $T(n)$,
+and allocate $T(n)$ space for each tape, one after the
+other.
+For each step in the $k$-tape machine, we may need to traverse $k T(n)$
+cells, and do this for $T(n)$ steps.
 
 \section{Universal Turing machine}
 Every Turing machine can be represented by a finite string over
@@ -211,6 +251,9 @@ machine encoded by it.
 \begin{theorem}[Universal Turing machine] \label{thm:utm}
     There exists a Turing machine $U$ that computes $M_\alpha(x)$ for
     every input $\alpha\vert x$.
+
+    Further, if $M_\alpha$ galts within $T$ steps, $U$ halts within
+    $C T \log T$ steps, where $C$ depends only on $M_\alpha$.
 \end{theorem}
 Modern day electronic computers are physical realizations of universal
 Turing machines.

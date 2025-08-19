@@ -1,5 +1,5 @@
 \chapter*{The course}
-\lecture{2025-08-06}{}
+\lecture{2025-08-06}{Introduction to probabilistic methods}
 
 \textbf{Instructor:} Anand Louis
 \\[1em]
@@ -19,7 +19,7 @@
     In any graph $G = (V, E)$, there is a cut $S \subseteq V$ such that
     $\abs{E(S, V \setminus S)} \ge \frac12 \abs{E}$.
 \end{proposition}
-I will call such cuts half-cuts.
+I will call such cuts \emph{half-cuts}.
 \begin{proof}
     Pick a uniform random set $S \subseteq V$.
     Each vertex is in $S$ with probability $1 / 2$.
@@ -31,43 +31,82 @@ I will call such cuts half-cuts.
 We've used the following.
 \begin{lemma}
     For any random variable $X$, \[
-        \Pr(X \ge \E X) > 0.
+        \P(X \ge \E X) > 0.
     \]
 \end{lemma}
 \begin{proof}
     Assume the contrary.
     Then $\E[X] - X > 0$ almost surely.
-    By positivity, the equality in $\E[\E[X] - X] \ge 0$ holds iff
+    By positivity, the equality in $0 = \E[\E[X] - X] \ge 0$ holds iff
     $\E[X] - X = 0$ almost surely.
     Contradiction.
 \end{proof}
+
+A remark is in order regarding the nature of these notes.
+I will be trying to prove probabilistic results in full generality (because
+even after $4$ probability courses I have understood absolutely nothing
+about the continuum).
+Knowing that a random variable is discrete often allows for much simpler
+proofs.
+In the above proof, I have tried to stick close to the following fact.
+\begin{fact}[Expectation] \label{thm:expectation}
+    There is a unique function $\E$ from $\mathsf{RV}_+$,
+    the space of non-negative (extended) real-valued random variables,
+    to $[0, \infty]$ such that
+    \begin{enumerate}[label=(E\arabic*)]
+        \item{} [Linearity] $\E[X + c Y] = \E[X] + c \E[Y]$ for all
+            $X, Y \in \mathsf{RV}_+$ and $c \ge 0$;
+        \item{} [Positivity] $\E[X] \ge 0$ with equality iff $X = 0$
+            almost surely;
+        \item{} [Monotone convergence] If $X_n \upto X$ almost surely,
+            then $\E[X_n] \upto \E[X]$; and
+        \item{} $\E[\1A] = \P(A)$ for all events $A$.
+    \end{enumerate}
+\end{fact}
+This is naturally extended to all real-valued random variables, and
+the supplied properties also hold only if the positivity is only in an
+almost sure sense (as with everything else in probability).
 
 We can do slightly better than \cref{thm:half-cut}.
 \begin{proposition}
     Let $S$ be a random cut of $G = (V, E)$
     and $X = \abs{E(S, V \setminus S)}$.
-    Then $\Pr(X \ge (1 - \delta) \E[X]) \ge \frac{\delta}{1 + \delta}$.
+    Then $\P(X > (1 - \delta) \E X) \ge \frac{\delta}{1 + \delta}$.
 \end{proposition}
-\begin{proof}
+\begin{proof}[Manual proof]
+    We know that $0 \le X \le \abs{E}$.
+    Let $A = \set{X > (1 - \delta) \E X}$ and $p = \P(A)$.
+    Then \begin{align*}
+        \frac{\abs E}{2} = \E X &= \EI XA + \EI X{A^c} \\
+            &\le \EI{\abs{E}}A + \EI{(1-\delta) \E X}{A^c} \\
+            &= p \abs{E} + (1 - p) (1 - \delta) \frac{\abs E}{2}.
+        \shortintertext{Rearranging,}
+        \delta &\le p(1 + \delta). \qedhere
+    \end{align*}
+\end{proof}
+In general, if $-a \le X \le b$ and $\E X \ge 0$,
+then $X > 0$ with probability at least $\frac{\E X}{b}$.
+\begin{proof}[Proof by Markov's inequality]
     Let $Y = \abs{E} - X \ge 0$.
     Now $X \le (1 - \delta) \E[X]$ is equivalent to
     $Y \ge \abs E - \frac{1 - \delta}2 \abs E = \frac{1 + \delta}2 \abs E$.
     Since $\E[Y] = \frac12 \abs{E}$, Markov's inequality gives \[
-        \Pr \set*{Y \ge \frac{1 + \delta}{2} \abs{E}}
+        \P \set*{Y \ge \frac{1 + \delta}{2} \abs{E}}
             \le \frac1{1 + \delta}.
-    \] Thus $\Pr(X > (1 - \delta) \E X) \ge \frac{\delta}{1 + \delta}$.
+    \] Thus $\P(X > (1 - \delta) \E X) \ge \frac{\delta}{1 + \delta}$.
 \end{proof}
 
 Thus, for any $\delta > 0$ and $\eps > 0$, we can sample a random cut
 $\log_{1 + \delta} \eps^{-1}$ times so that the largest of these cuts has
-size at least $(1 - \delta) \frac{\abs{E}}2$ with probability at least
+size more than $(1 - \delta) \frac{\abs{E}}2$ with probability at least
 $1 - \eps$.
 If we choose $\delta$ such that $(1 - \delta) \frac{\abs E}{2}
-> \frac{\abs E - 1}{2}$, we get a half-cut.
+\ge \frac{\abs E - 1}{2}$, we get a half-cut.
 
 \section{Derandomization} \label{sec:derandomization}
 We can derandomize the algorithm discussed previously.
 Label the vertices $1$ through $n$.
+Let $X_i$ denote whether $i \in S$ or $i \notin S$.
 \begin{align*}
     \frac{\abs E}{2} = \E[X]
         &= \frac12 \E[X \mid 1 \in S] + \frac12 \E[X \mid 1 \notin S]
@@ -76,14 +115,20 @@ Label the vertices $1$ through $n$.
     \E[X] &= \E[X \mid 1 \in S] \\
         &= \frac12 \E[X \mid 1 \in S, 2 \in S] + \frac12 \E[X \mid 1 \in S, 2 \notin S].
 \end{align*}
-Let $X_i$ denote whether $i \in S$ or $i \notin S$.
-If we could compare $\E[X \mid X_1, \dots, X_k, k + 1 \in S]$
-and $\E[X \mid X_1, \dots, X_k, k + 1 \notin S]$, we would get an algorithm.
-Writing $X$ as $\sum_{u, v} \1{u,v \text{ cross the cut}}$.
-Taking the difference of both conditional expectations shows that
-adding $k + 1$ locally greedily to one of $S$ and $V \setminus S$ has the
-greater expectation of $X$.
-This gives a linear time algorithm.
+If we could compare $\E[X \mid X_1, \dots, X_{k-1}, k \in S]$
+and $\E[X \mid X_1, \dots, X_{k-1}, k \notin S]$, we would get an algorithm,
+picking the ``better'' (the guarantee we obtain here is better,
+the choice may or may not be) choice at each step.
+These probabilities are easy to compute in $O(\abs{E})$ time at each step.
+This gives an $O(\abs{V}\abs{E})$ algorithm.
+
+Here, though, we can analyze without computation.
+Write $X$ as $\sum_{u \sim v} \1{u,v \text{ crosses the cut}}$.
+Expanding out both conditional expectations shows that their difference
+only depends on $X_u$ for $u \sim k$ which have already been determined.
+Thus it is best to simply add $k$ to whichever of $S$ and
+$V \setminus S$ has fewer of its neighbors at that time step.
+This gives an $O(\abs{E})$ algorithm.
 
 \begin{exercise}[Local search for half-cut]
     Start with an arbitrary cut $S_0 \subseteq V$.
@@ -91,3 +136,12 @@ This gives a linear time algorithm.
     increases the (edge-)size of the cut, do it.
     This process terminates and yields a half-cut.
 \end{exercise}
+\begin{proof}
+    Terminates because the size can only increase so much.
+    Once it terminates, each vertex has at least half of its incident edges
+    being a part of the cut.
+    Thus the cut is a half-cut and the algorithm takes
+    $O(\abs E^2)$ time.
+\end{proof}
+I will not care enough to write $\abs V + \abs E$ in place of $\abs E$
+simply because pathetic loner vertices may exist.

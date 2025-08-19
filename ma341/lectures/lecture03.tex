@@ -1,0 +1,149 @@
+\lecture{2025-08-12}{}
+\begin{lemma}
+    Any two norms on $\R^n$ are equivalent.
+    That is, if $\norm{\cdot}_1$ and $\norm{\cdot}_2$ are norms on
+    $\R^n$, then there exist $0 < m < M$ such that \[
+        B_1(0; 1) \subseteq B_2(0, m) \text{ and }
+        B_2(0; 1) \subseteq B_1(0, M).
+    \]
+\end{lemma}
+\begin{proof}
+    Norms are continuous \todo{how?},
+    so they achieve a maximum and minimum on the surface on the unit ball.
+\end{proof}
+
+\begin{lemma} \label{thm:sylv-forward}
+    If $A$ is PSD (resp.{} PD), then so are all the principal submatrices.
+\end{lemma}
+\begin{proof}
+    Let $A$ be PSD (resp.{} PD)
+    Fix $J \subseteq [n]$.
+    We have to show that $A_{J \times J}$ is PSD (resp.{} PD).
+
+    For any non-zero $u \in \R^J$, fill it with zeroes so that we get
+    $v \in \R^n$ with \[
+        v_i = \begin{cases}
+            u_i & \text{if } i \in J, \\
+            0 & \text{otherwise}.
+        \end{cases}
+    \] Then $u^T A_{J \times J} u = v^T A v \ge 0$ (resp.{} $> 0$).
+\end{proof}
+
+\begin{lemma}
+    If all the principal minors of symmetric $A \in \R^{n \times n}$
+    are strictly positive, then $A$ is PD.
+\end{lemma}
+\begin{proof}
+    Induction.
+    Trivial for $n = 1$.
+
+    Fix $n > 1$, $A = A^T \in \R^{n \times n}$ and assume that the statement
+    holds for all smaller $n$.
+    Again write $A = U^T \Lambda U$.
+
+    \begin{claim}
+        At least $n - 1$ eigenvalues of $A$ are positive.
+    \end{claim}
+    \begin{subproof}
+        Suppose for the sake of contradiction that
+        $\lambda_1, \lambda_2 \le 0$.
+        Then for all $w \in \spn(u_1, u_2)$,
+        $w^T A w \le 0$.
+        That is $A\vert_{\spn(u_1, u_2)}$ is negative semidefinite
+        (that is, its negative is PSD).
+        On the other hand, for all non-zero $x \in \R^{n-1}$,
+        we have \[
+            \begin{pmatrix}
+                x \\
+                0
+            \end{pmatrix}^T A \begin{pmatrix}
+                x \\
+                0
+            \end{pmatrix} = x^T A_{[n-1] \times [n-1]} x.
+        \] Each principal minor of $A_{[n-1] \times [n-1]}$ is positive.
+        By the induction hypothesis, this is PD.
+        Thus there is an $(n-1)$-dimensional subspace where the quadratic
+        form is positive, and a $2$-dimensional space where it is
+        non-positive.
+        Contradiction.
+    \end{subproof}
+    Note that since $\det(A) > 0$, no eigenvalue is zero.
+    Since at least $n - 1$ of the eigenvalues are positive, the last one
+    must also be.
+\end{proof}
+
+\begin{definition}[Adjugate matrix] \label{def:adjugate}
+    Given $A \in \R^{n \times n}$, its \emph{adjugate matrix} is
+    $\adj(A) \coloneq (\alpha_{ij})^T$, where \[
+        \alpha_{ij} \coloneq (-1)^{i + j} \det(A_{([n] \setminus \set i) \times ([n] \setminus \set j)})
+    \]
+\end{definition}
+We will henceforth write
+$A_{([n] \setminus \set i) \times ([n] \setminus \set j)}$ as
+$A_{i^c \times j^c}$.
+
+\begin{fact}[Jacobi's formula]
+    $A \adj(A) = \adj(A) A = (\det A) \id_n$.
+\end{fact}
+
+\begin{theorem} \label{thm:jacobi}
+    Let $A(t) = (a_{ij}(t))\colon \R \to \R^{n \times n}$ be differentiable.
+    Then \[
+        \odv{}{t} (\det A(t)) = \trace \ab(\adj A(t) \odv{A(t)}{t})
+    \]
+\end{theorem}
+\begin{proof}
+    Let $A, B \in \R^{n \times n}$.
+    Let $f(\eps) = \det(A + \eps B) - \det A$.
+    This is a polynomial in $\eps$ which vanishes at $0$,
+    and $f'(0)$ is just the coefficient linear term.
+
+    Now \[
+        \det(A + \eps B) = \sum_{\sigma \in S_n} (-1)^\sigma
+            \prod_{k=1}^n (a_{k\sigma_k} + \eps b_{k\sigma_k})
+    \] has $n! n$ terms which are linear in $\eps$.
+    We get that the coefficient of $\eps b_{ij}$ is \[
+        \sum_{\sigma: \sigma_i = j} (-1)^\sigma
+            \prod_{k \ne i} a_{k \sigma_k}.
+    \] This is the same as $\det A_{i^c \times j^c}$ upto the sign.
+    The sign $(-1)^\sigma$ must be replaced by
+    $(-1)^{\sigma + (n - i) + (n - j)} = (-1)^{\sigma + i + j}$.
+    In conclusion, the linear term is \[
+        \sum_{i,j = 1}^n (-1)^{i+j} \det (A_{i^c \times j^c}) b_{ij}.
+    \]
+    Noting that $\sum_{ij} c_{ji} d_{ij} = \trace(CD)$, we have the the
+    linear term is $\trace(\adj(A)B)$.
+
+    Now, since $A(t)$ is differentiable, \[
+        A(t + \eps) = A(t) + \eps A'(t) + o(\eps).
+    \] Thus \[
+        \odv{}{t} \det A(t) = \mathbf{WTF}
+    \]
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:sylv}]
+    \Cref{thm:sylv-forward} immediately proves the backward direction by
+    expressing the determinant as the product of eigenvalues.
+
+    \Cref{thm:sylv-forward} gives the forward result for PD matrices.
+    We again induct for the PSD case.
+    $n = 1$ is trivial.
+
+    Fix $n > 1$, $A = A^T \in \R^{n \times n}$ and assume that all principal
+    minors are non-negative.
+    Fix $J \subseteq [n]$ and define
+    $f_J(t) \coloneq \det(A_{J \times J} + t \id_J)$.
+    $f_J(0)$ is a principal minor and hence non-negative.
+    By \cref{thm:jacobi}, \[
+        f_J'(2) = \trace(\adj(A_{J \times J} + 2 \id_J) \cdot 1).
+    \] But any diagonal entry of
+
+    \todo{got lost}
+
+    Fix $t > 0$.
+    Then $f_J'(t) > 0$ and therefore $f_J(t) > 0$ for all $J \subseteq [n]$.
+    Thus $\det(A + t \id)_{J \times J} > 0$ for all $J$.
+    By \Cref{thm:sylv-forward}, $A + t \id$ is PD.
+    As eigenvalues are continuous functions, letting $t \to 0^+$ gives that
+    $A$ is PSD.
+\end{proof}

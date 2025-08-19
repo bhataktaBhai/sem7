@@ -1,0 +1,144 @@
+\lecture{2025-08-19}{}
+A converse of \cref{thm:base} is also true.
+\begin{theorem*} \label{thm:base:converse}
+    Let $\mcB$ be a base for a topology $\T$ on $X$.
+    Then a set $V \subseteq X$ is open iff for all $x \in V$, there exists
+    a $W \in \mcB$ such that $x \in W \subseteq V$.
+\end{theorem*}
+\begin{proof}
+    Let $V$ be open.
+    Then, since $\mcB$ is a basis, we simply write $V$ as a union of open
+    sets, and thus obtain a $W$ for every $x \in V$.
+
+    Now suppose that for every $x \in V$ there exists a $W_x \in \mcB$ with
+    $x \in W_x \subseteq V$.
+    Then $V = \bigcup_{x \in V} W_x$ is open as each basic open set is open.
+\end{proof}
+
+\begin{question}
+    Let $\mcB \subseteq 2^X$.
+    When is $\mcB$ a base for \emph{some} topology on $X$?
+    That is, when is \[
+        \T = \set{\bigcup_{\alpha \in I} B_\alpha
+            : \set{B_\alpha}_\alpha \subseteq \mcB}
+    \] a topology?
+\end{question}
+It is easy to see that the resultant $\T$ is closed under arbitrary unions.
+It also contains the null set.
+We only require that it is closed under finite intersections,
+and contains $X$.
+Thus we need:
+\begin{itemize}
+    \item $\bigcup \mcB = X$.
+    \item For $V, W \in \T$, $V \cap W$ ``must'' belong to $\T$.
+        Write $V = \bigcup_{\alpha \in I} V_\alpha$ and
+        $W = \bigcup_{\beta \in J} W_\beta$ where $V_\alpha$ and $W_\beta$
+        are in $\mcB$.
+
+        Now \begin{align*}
+            V \cap W &= \bigcup_{(\alpha, \beta) \in I \times J} V_\alpha \cap W_\beta.
+        \intertext{\Cref{thm:base:converse} shows that, since
+        $V_\alpha \cap W_\beta$ must be open, we ``must'' have for every
+        $x \in V_\alpha \cap W_\beta$ the existence of a $U_x$ such
+        that $x \in U_x \subseteq V_\alpha \cap W_\beta$.
+        In that case,}
+            V \cap W &= \bigcup_{(\alpha, \beta) \in I \times J}
+                \ab(\bigcup_{x \in V_\alpha \cap W_\beta} U_x)
+        \end{align*} would be in $\T$.
+\end{itemize}
+
+This yields the following criterion.
+\begin{theorem*}[Base criterion] \label{thm:base-criterion}
+    $\mcB \subseteq 2^X$ is a base for a topology on $X$ iff
+    \begin{enumerate}
+        \item $\bigcup \mcB = X$, and
+        \item for any $V, W \in \mcB$ and $x \in V \cap W$, there exists a
+            $U \in \mcB$ such that $x \in U \subseteq V \cap W$.
+    \end{enumerate}
+\end{theorem*}
+\begin{proof}
+    Let $\T$ be the set of unions of elements in $\mcB$.
+    If $\mcB$ is a base, both the conditions hold easily
+    by \cref{thm:base:converse}.
+
+    For the converse, assume that the conditions hold.
+    $\O, X \in \T$ trivially.
+    Closure under arbitrary unions holds trivially.
+    Write $V = \bigcup_{\alpha \in I} V_\alpha$ and
+    $W = \bigcup_{\beta \in J} W_\beta$ where $V_\alpha$ and $W_\beta$
+    are in $\mcB$.
+    Now fix $x \in V \cap W$.
+    Then $x \in V_{\alpha^*} \cap W_{\beta^*}$ for some
+    $(\alpha^*, \beta^*) \in I \times J$.
+    Thus, by the second hypothesis, there exists a $U \in \mcB$ such that
+    $x \in U \subseteq V_{\alpha^*} \cap W_{\beta^*} \subseteq V \cap W$.
+    By \cref{thm:base}, $\mcB$ is a base.
+\end{proof}
+
+\begin{examples}
+    \item On $\R^2$, let $\mcB = \set{(a, b) \times (c, d) : a, b, c, d \in \R}$.
+        The union of these is $\R^2$.
+        Let $(a_1, b_1) \times (c_1, d_1)$ and
+        $(a_2, b_2) \times (c_2, d_2)$ be in $\mcB$.
+        Their intersection is \[
+            (\max\set{a_1, a_2}, \min\set{b_1, b_2})
+                \times (\max\set{c_1, c_2}, \min\set{d_1, d_2}) \in \mcB.
+        \] Thus by \cref{thm:base-criterion}, $\mcB$ is a base on $\R^2$.
+    \item{} [Metric spaces]
+        Let $(X, d)$ be a metric space
+        and $\mcB = \set{B(x; r) : x \in X, r \in (0, \infty)}$.
+        \begin{theorem}
+            $\mcB$ is a base for a topology on $X$.
+        \end{theorem}
+        \begin{proof}
+            $\bigcup \mcB = X$ as each $x \in B(x; 1)$.
+            Let $V_1 = B(x_1; r_1)$ and $V_2 = B(x_2; r_2)$.
+            For any $x \in V_1 \cap V_2$,
+            let $r = \min\set{r_1 - d(x, x_1), r_2 - d(x, x_2)}> 0$.
+            Then for any $y \in B(x; r)$, we have that \[
+                d(y, x_1) \le d(y, x) + d(x, x_1)
+                    < r_1 - d(x, x_1) + d(x, x_1) = r_1.
+            \]
+            Similarly $d(x_2, y) < r_2$.
+            Thus $y \in V_1 \cap V_2$.
+            Since $y$ was arbitrary,
+            $B(x; r_1) \subseteq V_1 \cap V_2$.
+        \end{proof}
+        We did not use positivity (distinct points having a positive
+        distance) in this proof.
+        Thus, such pseudometrics still generate a nice topology.
+\end{examples}
+
+\paragraph{``Closeness'' in arithmetic/algebra vs analysis/geometry.}
+\begin{itemize}
+    \item For $r \in (0, \infty)$, $x, y \in \R$ are $r$-close if
+    $\abs{x - y} < r$.
+    That is, one cannot tell apart $x$ and $y$ at resolution $r$.
+    But in an algebraic or purely arithmetic context,
+    we do not have inequalities.
+    \item For $n, m \in \Z$ and $d \in \Z^+$, we say $n, m \in \Z$ are
+    $d$-close if $d \mid (n - m)$, that is, $[n] = [m] \in \Z/d\Z$.
+    $d$-closeness is transitive in this case.
+    This motivates the arithmetic progression topology.
+\end{itemize}
+\begin{proposition}[Arithmetic progression topology] \label{thm:ap-topo}
+    Let $\mcB = \set{n + d \Z : n \in \Z, d \in \Z^+}$.
+    This is a base on $\Z$.
+\end{proposition}
+\begin{proof}
+    $\Z = 0 + 1 \Z \in \mcB$.
+
+    For $n_1 + d_1 \Z$ and $n_2 + d_2 \Z$ in $\mcB$ and $x$ in their
+    intersection, note that $x \in x + d_1 d_2 \Z$.
+\end{proof}
+Note that any set $n + d \Z$ is also closed.
+That is, each basic open set is also a closed set.
+But \[
+    \Z \setminus \set{\pm 1} = \bigcup_{p \text{ prime}} p \Z
+\] is open.
+It cannot be closed, since $\set{\pm 1}$ cannot be open!
+(Any non-empty open set is the union of infinite sets.)
+If there were finitely many primes, this would be a finite intersection of
+closed sets.
+Hence, there are infinitely many primes (this is Furstenberg's proof of
+the infinitude of primes).

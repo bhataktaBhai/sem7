@@ -1,0 +1,140 @@
+\lecture{2025-08-18}{Markov, Chebyshev; $G(n, p)$ thresholds}
+\begin{theorem}[Markov's inequality] \label{thm:markov}
+    For any non-negative random variable $X$, \[
+        \P(X \ge a) \le \frac{\E X}{a}.
+    \]
+\end{theorem}
+\begin{proof}
+    $X \ge X \1{X \ge a} \ge a \1{X \ge a}$.
+    Taking expectations, $\E X \ge a \P(X \ge a)$.
+\end{proof}
+
+\begin{theorem}[Chebyshev's inequality] \label{thm:chebyshev}
+    Let $X$ be any random variable with mean $\mu$ and variance $\sigma^2$.
+    Then \[
+        \P(\abs{X - \mu} \ge t \sigma) \le \frac1{t^2}.
+    \]
+\end{theorem}
+\begin{proof}
+    Apply Markov's inequality to the random variable $(X - \mu)^2$ with
+    $a$ set to $t^2 \sigma^2$.
+\end{proof}
+
+When $X$ is integer-valued and non-negative, we can use this to our
+advantage.
+Specifically, $\P(X > 0) = \P(X \ge 1) \le \mu$.
+If $\mu < 1$, then $X$ takes the value $0$ with positive probability.
+
+In fact, if $\mu = o(1)$, then $X = 0$ with high probability.
+If $\mu \ge 1$, this is useless.
+
+Chebyshev's inequality yields a bound for the \emph{other} direction. \[
+    \P(X = 0) \le \P(\abs{X - \mu} \ge \mu) \le \frac{\sigma^2}{\mu^2}.
+\] Thus, if $\sigma^2 = o(\mu^2)$, then $X > 0$ with high probability.
+
+\begin{lemma}
+    If $X_1, \dots, X_k$ are $\Ber(p_1), \dots, \Ber(p_k)$ random variables,
+    respectively, and $X$ denotes their sum, then \[
+        \Var(X) \le \E[X] + \sum_{i \ne j} \E[X_i X_j].
+    \]
+\end{lemma}
+\begin{proof}
+    \begin{align*}
+        \Var(X) &= \sum_i \Var(X_i) + \sum_{i \ne j} \Cov(X_i, X_j) \\
+            &= \sum_i p_i(1 - p_i) + \sum_{i \ne j} \E[X_i X_j] - \E[X_i] \E[X_j] \\
+            &\le \sum_i p_i + \sum_{i \ne j} \E[X_i X_j]. \qedhere
+    \end{align*}
+\end{proof}
+If $\mu = \omega(1)$, then the first term is $o(\mu^2)$,
+so we only need to bound the second term to use the observation pertaining
+to $\sigma^2 = o(\mu^2)$ above.
+
+\section{Erdős–Rényi graphs} \label{sec:gnp}
+\begin{lemma}
+    $G(n, \frac12)$ is uniformly distributed over all all graphs with
+    vertex set $[n]$.
+\end{lemma}
+\begin{proof}
+    The total number of graphs is $2^{\binom{n}{2}}$.
+    For any graph $G$, \[
+        \P\ab(G(n, 1/2) = G)
+            = \ab(\frac12)^{\abs E} \ab(\frac12)^{\binom n2 - \abs E}
+            = \frac1{2^{\binom{n}{2}}}. \qedhere
+    \]
+\end{proof}
+
+\begin{definition}[Threshold] \label{def:gnp:threshold}
+    A property $\Pi$ on the set of graphs on $[n]$ is said to have a
+    \emph{threshold} function $f$ if for $G(n, p)$, $\Pi$ holds with
+    high probability when $p \gg f(n)$ and with low probability when
+    $p \ll f(n)$.
+\end{definition}
+We will not be properly defining $\gg$ and $\ll$.
+The obvious choice is $p \ll f$ iff $p = o(f)$ and $p \gg f$ iff
+$p = \omega(f)$, which is what we will prove shortly.
+
+\begin{notation}
+    For a graph $G$, $\omega(G)$ will denote the size of the largest clique
+    in $G$.
+\end{notation}
+\begin{theorem}
+    $\Pi(G) = \1{\omega(G) \ge 4}$ has a threshold function
+    $n \mapsto n^{-2/3}$.
+\end{theorem}
+\begin{proof}
+    For each $I \in \binom{[n]}{4}$, let $X_I$ indicate whether
+    the corresponding $4$ vertices form a clique.
+    Let $X = \sum_I X_I$.
+    Then $\E[X] = \binom{n}{4} p^6 = \Theta(n^4 p^6)$.
+    Note that $p = o(n^{-2/3}) \iff \E[X] = o(1)$, so in that case,
+    no $4$-clique exists with high probability.
+
+    We also have that \begin{align*}
+        \Var(X) &\le \E[X] + \sum_{I \ne J} \Cov(X_I, X_J).
+        \shortintertext{In the case that $\abs{I \cap J}$ is $0$ or $1$,
+        $X_I$ and $X_J$ are independent.
+        Thus}
+        \Var(X) &\le n^4 p^6 + \sum_{\abs{I \cap J} = 2} \Cov(X_I, X_J)
+                + \sum_{\abs{I \cap J} = 3} \Cov(X_I, X_J) \\
+            &\le n^4 p^6 + C_2 n^6 p^{11} + C_3 n^5 p^9
+    \end{align*} where $C_2$ and $C_3$ are some constants.
+    We require $n^4 p^6$, $n^6 p^{11}$ and $n^5 p^9$ to be $o(n^8 p^{12})$.
+    That is, $1 = o(n^4 p^6)$, $1 = o(n^2 p)$ and $1 = o(n^3 p^3)$.
+    In other words, $p = \omega(n^{-2/3})$, $p = \omega(n^{-1/2})$
+    and $p = \omega(n^{-1})$.
+\end{proof}
+The same proof goes through for any $k \ge 4$, with differing threshold
+functions.
+\begin{exercise}
+    \todo[inline]{What goes wrong when $k = 3$?}
+\end{exercise}
+
+\begin{theorem}
+    $\omega(G(n, \frac12)) \in (2 \pm o(1)) \log n$
+    with high probability.
+\end{theorem}
+\begin{proof}
+    Fix $k \in [n]$.
+    Let $(X_\alpha)_{\alpha \in \binom{[n]}{k}}$ be indicator random
+    variables as before.
+    Then $\E[X] = \binom{n}{k} \ab(\frac12)^{\binom{k}{2}} \le
+    \binom{n}{k} 2^{-\frac{k^2}{2}} = 2^{k \log n - k^2/2}$.
+
+    When $k = (2 + o(1)) \log n$, then $2^{k \log n - k^2 / 2} = o(1)$,
+    so there are no $k$-cliques with high probability.
+
+    \todo{Verify the above with what comes below.}
+    If $k = (2 + f(n)) \log n$ where $f(n) = o(1)$, then \begin{align*}
+        k \log n - k^2 / 2
+            &= 2 \log^2 n + f(n) \log n - 2 \log^2 n - 2 f(n) \log n - f(n)^2 / 2 \\
+            &= -f(n) \log n - f(n)^2 / 2
+    \end{align*}
+    If $f$ decays too rapidly, this is not limiting to $-\infty$.
+    Since the second term goes to $0$, we ignore it.
+    We require $f = \omega(\frac1{\log n})$,
+    without of course violating that $f = o(1)$.
+
+    \begin{exercise}
+        \todo[inline]{Prove the other direction}.
+    \end{exercise}
+\end{proof}
